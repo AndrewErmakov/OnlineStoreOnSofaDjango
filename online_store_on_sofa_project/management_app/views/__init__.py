@@ -1,9 +1,8 @@
-from .CheckRequestsFeedbackView import CheckRequestsFeedbackView
-from .SendAnswerToClientFeedbackRequest import SendAnswerToClientFeedbackRequest
-from .AddNewProductsView import AddNewProductsView
-from .AddImagesForProductView import AddImagesForProductView
-from .ChangeInfoProductView import ChangeInfoProductView
-from .AddCountReceivedProductToWarehouse import AddCountReceivedProductToWarehouse
-from .ChangeCharacteristicsProductView import ChangeCharacteristicsProductView
-
-from .GetSalesAnalyticsView import GetSalesAnalyticsView
+from .check_feedback_claim_view import CheckFeedbackClaimView
+from .send_answer2client_feedback_claim import SendAnswerToClientFeedbackClaim
+from .add_product_view import AddProductView
+from .add_product_img_view import AddProductImageView
+from .change_product_info_view import ChangeProductInfoView
+from .add_received_product2warehouse import AddReceivedProductToWarehouse
+from .change_characteristics_product_view import ChangeCharacteristicsProductView
+from .sales_analytics_view import GetSalesAnalyticsView
