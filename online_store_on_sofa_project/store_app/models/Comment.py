@@ -14,6 +14,7 @@ class Comment(models.Model):
     date_comment = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата комментирования')
 
     class Meta:
+        db_table = 'comment'
         verbose_name_plural = 'Комментарии'
         verbose_name = 'Комментарий'
         ordering = ['product']

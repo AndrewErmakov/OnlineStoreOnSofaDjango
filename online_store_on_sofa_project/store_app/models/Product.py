@@ -25,12 +25,11 @@ class Product(models.Model):
                                          validators.MaxValueValidator(5)]
                                      )
 
-
     class Meta:
+        db_table = 'product'
         verbose_name_plural = 'Товары'
         verbose_name = 'Товар'
         ordering = ['-sale_start_time']
 
     def __str__(self):
         return self.title
-

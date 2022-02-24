@@ -24,6 +24,7 @@ class Order(models.Model):
         return f'{str(self.pk).zfill(6)}'
 
     class Meta:
+        db_table = 'order'
         verbose_name_plural = 'Заказы'
         verbose_name = 'Заказ'
         ordering = ['date_order', 'num_order', 'buyer_email']

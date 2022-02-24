@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import *
+from store_app.models import *
 
 
 @admin.register(Product)
@@ -53,7 +53,6 @@ class OrderAdmin(admin.ModelAdmin):
                           'method_receive_order', 'date_order']
     search_fields = ('num_order', 'created_at', 'recipient', 'buyer_email', 'total_sum', 'payment_method',
                      'method_receive_order', 'date_order')
-
 
 
 @admin.register(Recipient)

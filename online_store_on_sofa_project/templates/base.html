@@ -22,8 +22,8 @@
                             <img src="{% static 'images/logo_cyber.png' %}" alt="logo of store" />
                         </a>
                     </div>
-                    {% if user.is_authenticated %}
                     <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span>{{ user.username }}!<span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -32,26 +32,12 @@
                                 <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-in"></span>Выйти из аккаунта</a></li>
                             </ul>
                         </li>
-                        <li><a href="{% url 'user_cart_page'%}"><span class="glyphicon glyphicon-shopping-cart"></span>Your cart</a></li>
-
-                    </ul>
+                        <li><a href="{% url 'user_cart_page'%}"><span class="glyphicon glyphicon-shopping-cart"></span>Корзина</a></li>
                     {% else %}
-                    <ul class="nav navbar-nav navbar-right">
                         <li><a href="{% url 'signup' %}"><span class="glyphicon glyphicon-user"></span>Sign Up</a></li>
                         <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>
-                    </ul>
                     {% endif %}
-                    <form class="navbar-form navbar-right" role="search" method="GET" action="{% url 'search_products' %}">
-                        {% csrf_token %}
-                        <div class="form-group input-group">
-                            <input type="text" class="form-control" placeholder="Search.." name="search_text">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="submit">
-                                    <span class="glyphicon glyphicon-search"></span>
-                                </button>
-                            </span>
-                        </div>
-                    </form>
+                    </ul>
                 </div>
             </nav>
         </header>
@@ -60,6 +46,7 @@
             {% block content %}
             {% endblock content %}
         </main>
+
         <footer class="footer mt-auto py-3">
               <div class="container">
                   <p class="text-muted"><a href="{% url 'contacts' %}">Контакты</a></p>
@@ -89,9 +76,8 @@
               </div>
         </footer>
         <script type="text/javascript" src="{% static 'js/feedback_form.js' %}"></script>
-
-        {% block scripts %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+        {% block scripts %}
         {% endblock scripts %}
     </body>
 </html>
