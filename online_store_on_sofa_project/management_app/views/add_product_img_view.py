@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from rolepermissions.mixins import HasPermissionsMixin
-from management_app.forms import AddImageForProductForm
+from management_app.forms import NewProductImageForm
 
 
 class AddProductImageView(View, HasPermissionsMixin):
@@ -12,7 +12,7 @@ class AddProductImageView(View, HasPermissionsMixin):
             return render(
                 request=request,
                 template_name='add_images_for_product.html',
-                context={'form': AddImageForProductForm()}
+                context={'form': NewProductImageForm()}
             )
         except Exception as e:
             print(e)
@@ -20,7 +20,7 @@ class AddProductImageView(View, HasPermissionsMixin):
 
     def post(self, request):
         try:
-            form = AddImageForProductForm(request.POST, request.FILES)
+            form = NewProductImageForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
             return redirect('add_images_for_product')

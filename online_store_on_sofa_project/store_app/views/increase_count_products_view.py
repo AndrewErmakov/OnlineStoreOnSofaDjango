@@ -3,7 +3,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import Product, ProductInCart, CartUser, WarehouseProducts
+from store_app.models import Product, ProductInCart, Cart, WarehouseProducts
 
 
 class IncreaseCountProductsView(View, LoginRequiredMixin):
@@ -14,7 +14,7 @@ class IncreaseCountProductsView(View, LoginRequiredMixin):
         try:
             product = Product.objects.get(pk=request.POST.get('product_id'))
 
-            product_in_cart = ProductInCart.objects.get(cart_user=CartUser.objects.get(user=request.user),
+            product_in_cart = ProductInCart.objects.get(cart_user=Cart.objects.get(user=request.user),
                                                         product=product)
 
             """Проверка наличия еще 1 экземпляра товара"""

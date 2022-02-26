@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import Product, ProductInCart, CartUser, WarehouseProducts
+from store_app.models import Product, ProductInCart, Cart, WarehouseProducts
 
 
 class ReduceCountProductsView(View, LoginRequiredMixin):
@@ -13,7 +13,7 @@ class ReduceCountProductsView(View, LoginRequiredMixin):
         try:
             product = Product.objects.get(pk=request.POST.get('product_id'))
 
-            product_in_cart = ProductInCart.objects.get(cart_user=CartUser.objects.get(user=request.user),
+            product_in_cart = ProductInCart.objects.get(cart_user=Cart.objects.get(user=request.user),
                                                         product=product)
 
             if product_in_cart.count_product_in_cart == 1:

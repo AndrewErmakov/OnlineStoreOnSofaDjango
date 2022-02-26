@@ -9,6 +9,7 @@ class Recipient(models.Model):
                                        null=True)
 
     class Meta:
+        db_table = 'recipient'
         verbose_name_plural = 'Получатели заказа'
         verbose_name = 'Получатель заказа'
         ordering = ['name_recipient', 'surname_recipient']

@@ -61,7 +61,7 @@ class OrderingPaymentOnlineView(View, LoginRequiredMixin):
                     """Удалим товар из таблицы ProductsInCart"""
                     product_in_cart.delete()
 
-                order.total_sum = total_sum
+                order.total_price = total_sum
                 order.save()
 
                 """Очистим таблицу пользователя"""

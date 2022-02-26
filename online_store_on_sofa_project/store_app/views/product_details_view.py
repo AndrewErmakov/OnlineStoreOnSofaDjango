@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 
-from store_app.models import Product, Rubric, WarehouseProducts
+from store_app.models import Product, Category, WarehouseProducts
 
 
 class ProductDetailsView(View):
@@ -9,7 +9,7 @@ class ProductDetailsView(View):
 
     def get(self, request, pk):
         product = Product.objects.get(pk=pk)
-        rubrics = Rubric.objects.all()
+        rubrics = Category.objects.all()
 
         try:
             count_product_in_warehouse = WarehouseProducts.objects.get(product=product).count_products

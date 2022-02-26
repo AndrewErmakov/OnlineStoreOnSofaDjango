@@ -3,7 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import Product, WarehouseProducts, CartUser
+from store_app.models import Product, WarehouseProducts, Cart
 
 
 class AddProductToCartView(View, LoginRequiredMixin):
@@ -21,7 +21,7 @@ class AddProductToCartView(View, LoginRequiredMixin):
                 response_data['status'] = 'MORE'
                 return JsonResponse(response_data)
 
-            cart_current_user = CartUser.objects.filter(user=request.user)
+            cart_current_user = Cart.objects.filter(user=request.user)
             if len(cart_current_user) != 0:
                 """Если корзина пользователя уже есть, и он добавлял ранее какой-то товар"""
                 cart_current_user[0].products.add(product_to_add_cart)
@@ -42,7 +42,7 @@ class AddProductToCartView(View, LoginRequiredMixin):
 
             else:
                 """Иначе создается корзина, и добавляется первый товар в корзину"""
-                cart_current_user = CartUser(user=request.user)
+                cart_current_user = Cart(user=request.user)
                 cart_current_user.save()
                 cart_current_user.products.add(Product.objects.get(pk=request.POST.get('product_id')))
                 cart_current_user.productincart_set.create(product=product_to_add_cart,

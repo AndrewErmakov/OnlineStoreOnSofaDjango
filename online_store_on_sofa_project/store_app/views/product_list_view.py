@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.db.models import Q
 
-from store_app.models import Product, Rubric
+from store_app.models import Product, Category
 
 SORT_MAPPER = {
     'price_asc': ('price', 'по возрастанию цены'),
@@ -20,7 +20,7 @@ class ProductListView(View):
         query_params = request.GET
 
         products = Product.objects.all()
-        rubrics = Rubric.objects.all()
+        rubrics = Category.objects.all()
 
         rubric_id = query_params.get('rubric')
         if rubric_id is not None:
