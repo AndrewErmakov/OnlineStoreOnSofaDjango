@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import Product, ProductInCart, Cart, WarehouseProducts
+from store_app.models import Product, ProductInCart, Cart, Warehouse
 
 
 class ReduceCountProductsView(View, LoginRequiredMixin):
@@ -16,16 +16,16 @@ class ReduceCountProductsView(View, LoginRequiredMixin):
             product_in_cart = ProductInCart.objects.get(cart_user=Cart.objects.get(user=request.user),
                                                         product=product)
 
-            if product_in_cart.count_product_in_cart == 1:
+            if product_in_cart.quantity == 1:
                 response_data['status'] = 'ENOUGH'
                 return JsonResponse(response_data)
 
-            product_in_cart.count_product_in_cart -= 1
+            product_in_cart.quantity -= 1
             product_in_cart.save()
 
             """Восполнение запасов на складе данной позициии товара"""
-            product_in_warehouse = WarehouseProducts.objects.get(product=product)
-            product_in_warehouse.count_products += 1
+            product_in_warehouse = Warehouse.objects.get(product=product)
+            product_in_warehouse.quantity += 1
             product_in_warehouse.save()
 
             response_data['status'] = 'OK'

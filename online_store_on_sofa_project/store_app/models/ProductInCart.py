@@ -6,15 +6,19 @@ from .Cart import Cart
 
 class ProductInCart(models.Model):
     """Модель одной позиции товара в корзине"""
-    cart_user = models.ForeignKey(Cart, on_delete=models.CASCADE,
-                                  verbose_name='Никнейм пользователя - владельца корзины', blank=True, null=True)
+    cart = models.ForeignKey(
+        to=Cart,
+        on_delete=models.CASCADE,
+        verbose_name='Никнейм пользователя - владельца корзины',
+        blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Название товара')
-    count_product_in_cart = models.PositiveIntegerField(default=1, verbose_name='Количество данного товара')
+    quantity = models.PositiveIntegerField(default=1, verbose_name='Количество данного товара')
 
     def __str__(self):
-        return f'В корзине {self.cart_user.user.username} лежит товар {self.product.name} в количестве ' \
-               f'{self.count_product_in_cart}'
+        return f'В корзине {self.cart.user.username} лежит товар {self.product.name} в количестве ' \
+               f'{self.quantity}'
 
     class Meta:
+        db_table = 'product_in_cart'
         verbose_name_plural = 'Количество определенного товара в корзине'
-        ordering = ['cart_user']
+        ordering = ['cart']

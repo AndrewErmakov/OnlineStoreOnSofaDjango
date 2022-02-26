@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from rolepermissions.mixins import HasPermissionsMixin
 from management_app.forms import NewProductForm
-from store_app.models import Product, WarehouseProducts
+from store_app.models import Product, Warehouse
 
 
 class AddProductView(View, HasPermissionsMixin):
@@ -28,7 +28,7 @@ class AddProductView(View, HasPermissionsMixin):
                     brand=form.cleaned_data['brand'],
                     rubric=form.cleaned_data['category']
                 )
-                WarehouseProducts.objects.create(
+                Warehouse.objects.create(
                     product=new_product,
                     count_products=request.POST.get('count_product')
                 )

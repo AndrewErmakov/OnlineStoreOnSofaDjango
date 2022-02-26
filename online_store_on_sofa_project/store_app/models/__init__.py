@@ -8,4 +8,4 @@ from .ProductsInOrder import ProductsInOrder
 from .ProductInCart import ProductInCart
 from .Recipient import Recipient
 from .Category import Category
-from .WarehouseProducts import WarehouseProducts
+from .Warehouse import Warehouse

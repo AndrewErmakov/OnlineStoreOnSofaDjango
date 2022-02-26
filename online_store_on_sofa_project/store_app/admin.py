@@ -24,25 +24,25 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ('product', 'text', 'author', 'rating',)
 
 
-@admin.register(WarehouseProducts)
-class WarehouseProductsAdmin(admin.ModelAdmin):
-    list_display = ('product', 'count_products')
-    list_display_links = ['product', 'count_products']
-    search_fields = ('product', 'count_products',)
+@admin.register(Warehouse)
+class WarehouseAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity')
+    list_display_links = ['product', 'quantity']
+    search_fields = ('product', 'quantity',)
 
 
 @admin.register(Cart)
-class CartUserAdmin(admin.ModelAdmin):
+class CartAdmin(admin.ModelAdmin):
     list_display = ['user']
     list_display_links = ['user']
     search_fields = ('products', 'user',)
 
 
 @admin.register(ProductInCart)
-class CountProductInCartAdmin(admin.ModelAdmin):
-    list_display = ('product', 'count_product_in_cart', 'cart_user')
+class ProductInCartAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity', 'cart')
     list_display_links = ['product']
-    search_fields = ('product', 'count_product_in_cart',)
+    search_fields = ('product', 'quantity',)
 
 
 @admin.register(Order)

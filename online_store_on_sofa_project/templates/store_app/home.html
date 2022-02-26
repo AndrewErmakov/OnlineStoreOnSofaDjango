@@ -15,10 +15,10 @@
     <div class="row content">
         <div class="col-sm-2 sidenav" id="list_rubrics">
             <h3>Выбрать рубрику:</h3>
-            <select class="form-control" id="selectRubric" onchange="selectRubric()">
-                <option value="all" id="rubric_all">Все рубрики</option>
-                {% for rubric in rubrics %}
-                <option value="{{ rubric.id }}" id="rubric_{{ rubric.id }}">{{ rubric.name }}</option>
+            <select class="form-control" id="selectCategory" onchange="selectCategory()">
+                <option value="all">Все рубрики</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}" id="rubric_{{ category.id }}">{{ category.name }}</option>
                 {% endfor %}
             </select>
             <hr>
@@ -43,8 +43,8 @@
                     <option value="many_reviews">Много отзывов</option>
                 </select>
                 <hr>
-                {% if rubric %}
-                <h2>Выбранная рубрика: {{ rubric }}</h2>
+                {% if category %}
+                <h2>Выбранная категория: {{ category }}</h2>
                 {% endif %}
                 {% if sorting_type %}
                 <h3>Отсортировано {{ sorting_type }}</h3>
@@ -54,13 +54,12 @@
                 {% endif %}
                 <hr>
                 <div class="row">
-                    {% for product in new_products %}
+                    {% for product in page_obj %}
                     <div class="col-sm-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <p align="center"><a href="{% url 'product_details' product.pk %}">{{ product.title }}</a></p>
+                                <p class="lead" align="center"><a href="{% url 'product_details' product.pk %}">{{ product.name }}</a></p>
                             </div>
-
                             <div class="panel-body" id="product_image">
                                   <div id="carousel_{{ forloop.counter }}" class="carousel slide" data-ride="carousel">
                                       <div class="carousel-inner">
@@ -111,6 +110,22 @@
                     {% endfor %}
                 </div>
             </div><br>
+            <div class="pagination" align="center">
+                <span class="step-links">
+                    <span class="current">
+                        <code>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</code>
+                    </span>
+                    <br>
+                    {% if page_obj.has_previous %}
+                        <button class="btn btn-success" onclick="changePageNumber(1)">&laquo; first</button>
+                        <button class="btn btn-success" onclick="changePageNumber({{ page_obj.previous_page_number }})">previous</button>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <button class="btn btn-success" onclick="changePageNumber({{ page_obj.next_page_number }})">next</button>
+                        <button class="btn btn-success" onclick="changePageNumber({{ page_obj.paginator.num_pages }})">last &raquo;</button>
+                    {% endif %}
+                </span>
+            </div>
         </div>
         <div class="col-sm-2 sidenav">
           <div class="well">

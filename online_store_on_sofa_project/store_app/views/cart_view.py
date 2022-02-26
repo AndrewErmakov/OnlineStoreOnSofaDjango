@@ -19,9 +19,9 @@ class CartView(View, LoginRequiredMixin):
                 for product in products_in_cart:
                     product_in_cart = ProductInCart.objects.filter(cart_user=cart_current_user,
                                                                    product=product)[0]
-                    count_each_product[product.pk] = [product_in_cart.count_product_in_cart]
-                    count_each_product[product.pk].append(product_in_cart.count_product_in_cart * product.price)
-                    total_sum += product_in_cart.count_product_in_cart * product.price
+                    count_each_product[product.pk] = [product_in_cart.quantity]
+                    count_each_product[product.pk].append(product_in_cart.quantity * product.price)
+                    total_sum += product_in_cart.quantity * product.price
                 return render(request, 'user_cart_page.html', {'products_in_cart': products_in_cart,
                                                                'is_empty_cart': False,
                                                                'count_each_product': count_each_product,

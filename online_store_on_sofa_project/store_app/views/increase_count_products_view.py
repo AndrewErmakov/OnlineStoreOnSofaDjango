@@ -3,7 +3,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import Product, ProductInCart, Cart, WarehouseProducts
+from store_app.models import Product, ProductInCart, Cart, Warehouse
 
 
 class IncreaseCountProductsView(View, LoginRequiredMixin):
@@ -18,15 +18,15 @@ class IncreaseCountProductsView(View, LoginRequiredMixin):
                                                         product=product)
 
             """Проверка наличия еще 1 экземпляра товара"""
-            product_in_warehouse = WarehouseProducts.objects.get(product=product)
-            if product_in_warehouse.count_products >= 1:
+            product_in_warehouse = Warehouse.objects.get(product=product)
+            if product_in_warehouse.quantity >= 1:
                 with transaction.atomic():
                     """Товар на складе есть"""
-                    product_in_cart.count_product_in_cart += 1
+                    product_in_cart.quantity += 1
                     product_in_cart.save()
 
                     """Уменьшение запасов на складе данной позициии товара на 1"""
-                    product_in_warehouse.count_products -= 1
+                    product_in_warehouse.quantity -= 1
                     product_in_warehouse.save()
 
                     response_data['status'] = 'OK'
