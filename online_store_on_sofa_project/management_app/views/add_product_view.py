@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from rolepermissions.mixins import HasPermissionsMixin
-from management_app.forms import AddNewProductsForm
-from store_app.models import Product, WarehouseProducts
+from management_app.forms import NewProductForm
+from store_app.models import Product, Warehouse
 
 
 class AddProductView(View, HasPermissionsMixin):
@@ -10,7 +10,7 @@ class AddProductView(View, HasPermissionsMixin):
 
     def get(self, request):
         try:
-            form = AddNewProductsForm()
+            form = NewProductForm()
             return render(request, 'add_new_products.html', {'form': form})
         except Exception as e:
             print(e)
@@ -18,17 +18,17 @@ class AddProductView(View, HasPermissionsMixin):
 
     def post(self, request):
         try:
-            form = AddNewProductsForm(request.POST)
+            form = NewProductForm(request.POST)
 
             if form.is_valid():
                 new_product = Product.objects.create(
-                    title=form.cleaned_data['title'],
+                    title=form.cleaned_data['name'],
                     description=form.cleaned_data['description'],
                     price=form.cleaned_data['price'],
                     brand=form.cleaned_data['brand'],
-                    rubric=form.cleaned_data['rubric']
+                    rubric=form.cleaned_data['category']
                 )
-                WarehouseProducts.objects.create(
+                Warehouse.objects.create(
                     product=new_product,
                     count_products=request.POST.get('count_product')
                 )

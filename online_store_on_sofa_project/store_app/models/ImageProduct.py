@@ -12,9 +12,10 @@ class ImageProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
 
     class Meta:
+        db_table = 'image_product'
         verbose_name_plural = 'Изображения товаров'
         verbose_name = 'Изображение товара'
         ordering = ['product']
 
     def __str__(self):
-        return self.product.title
+        return self.product.name

@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import Product, ProductInCart, CartUser, WarehouseProducts
+from store_app.models import Product, ProductInCart, Cart, Warehouse
 
 
 class DeleteProductInCartView(View, LoginRequiredMixin):
@@ -17,12 +17,12 @@ class DeleteProductInCartView(View, LoginRequiredMixin):
             request.user.cartuser.products.remove(product)
 
             """Удаление из таблицы ProductInCart"""
-            ProductInCart.objects.get(cart_user=CartUser.objects.get(user=request.user),
+            ProductInCart.objects.get(cart_user=Cart.objects.get(user=request.user),
                                       product=product).delete()
 
             """Восполнение запасов на складе данной позициии товара"""
-            product_in_warehouse = WarehouseProducts.objects.get(product=product)
-            product_in_warehouse.count_products += int(request.POST.get('count_products').split()[0])
+            product_in_warehouse = Warehouse.objects.get(product=product)
+            product_in_warehouse.quantity += int(request.POST.get('count_products').split()[0])
             product_in_warehouse.save()
 
             response_data['status'] = 'OK'

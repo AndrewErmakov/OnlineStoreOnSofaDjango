@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from rolepermissions.mixins import HasPermissionsMixin
-from store_app.models import Product, WarehouseProducts
+from store_app.models import Product, Warehouse
 
 
 class AddReceivedProductToWarehouse(View, HasPermissionsMixin):
@@ -18,8 +18,8 @@ class AddReceivedProductToWarehouse(View, HasPermissionsMixin):
 
     def post(self, request, pk):
         try:
-            product_in_warehouse = WarehouseProducts.objects.get(product=Product.objects.get(pk=pk))
-            product_in_warehouse.count_products += int(request.POST.get('count_prod'))
+            product_in_warehouse = Warehouse.objects.get(product=Product.objects.get(pk=pk))
+            product_in_warehouse.quantity += int(request.POST.get('count_prod'))
             product_in_warehouse.save()
 
             return redirect('change_info_product')

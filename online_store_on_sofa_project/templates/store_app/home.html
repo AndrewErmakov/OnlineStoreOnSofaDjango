@@ -15,39 +15,52 @@
     <div class="row content">
         <div class="col-sm-2 sidenav" id="list_rubrics">
             <h3>Выбрать рубрику:</h3>
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                    Список рубрик<span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    {% for rubric in rubrics %}
-                    <li><a href="{% url 'products_by_rubric' rubric.pk %}">{{ rubric.name }}</a></li><hr>
-                    {% endfor %}
-                </ul>
+            <select class="form-control" id="selectCategory" onchange="selectCategory()">
+                <option value="all">Все рубрики</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}" id="rubric_{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <hr>
+            <h3>Найти товар:</h3>
+            <div class="form-group input-group">
+                <input type="text" class="form-control" placeholder="Search.." name="search_text" id="searchSymbols">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit" onclick="searchProduct()">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
             </div>
         </div>
         <div class="col-sm-8 text-left">
             <div class="container">
-                <div class="list-inline">
-                    <p class="lead">Cортировка</p>
-                    <select class="form-control" id="choice_sorting" onchange="window.location.href=this.options[this.selectedIndex].value">
-                        <option VALUE="{% url 'sorting_products' 'increase_price' %}">Дешевые сверху</option>
-                        <option VALUE="{% url 'sorting_products' 'decrease_price' %}">Дорогие сверху</option>
-                        <option VALUE="{% url 'sorting_products' 'top_rating' %}">Высокий рейтинг по отзывым</option>
-                        <option VALUE="{% url 'sorting_products' 'many_reviews' %}">Много отзывов</option>
-                        <option selected VALUE="{% url 'home' %}">По популярности</option>
-                    </select>
-                    <br>
-                </div>
+                <p class="lead">Cортировка</p>
+                <select class="form-control" id="selectSorting" onchange="selectSorting()">
+                    <option value="default">По популярности</option>
+                    <option value="price_asc">Дешевые сверху</option>
+                    <option value="price_desc">Дорогие сверху</option>
+                    <option value="top_rating">Высокий рейтинг по отзывым</option>
+                    <option value="many_reviews">Много отзывов</option>
+                </select>
+                <hr>
+                {% if category %}
+                <h2>Выбранная категория: {{ category }}</h2>
+                {% endif %}
+                {% if sorting_type %}
+                <h3>Отсортировано {{ sorting_type }}</h3>
+                {% endif %}
+                {% if search_text %}
+                <h3><b>Поиск</b>: <i>{{ search_text }}</i></h3>
+                {% endif %}
+                <hr>
                 <div class="row">
-                    {% for product in new_products %}
+                    {% for product in page_obj %}
                     <div class="col-sm-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <p align="center"><a href="{% url 'product_details' product.pk %}">{{ product.title }}</a></p>
+                                <p class="lead" align="center"><a href="{% url 'product_details' product.pk %}">{{ product.name }}</a></p>
                             </div>
-
-                            <div class="panel-body" id="product_image" align="center">
+                            <div class="panel-body" id="product_image">
                                   <div id="carousel_{{ forloop.counter }}" class="carousel slide" data-ride="carousel">
                                       <div class="carousel-inner">
                                           {% for image_product in product.imageproduct_set.all %}
@@ -97,6 +110,22 @@
                     {% endfor %}
                 </div>
             </div><br>
+            <div class="pagination" align="center">
+                <span class="step-links">
+                    <span class="current">
+                        <code>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</code>
+                    </span>
+                    <br>
+                    {% if page_obj.has_previous %}
+                        <button class="btn btn-success" onclick="changePageNumber(1)">&laquo; first</button>
+                        <button class="btn btn-success" onclick="changePageNumber({{ page_obj.previous_page_number }})">previous</button>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <button class="btn btn-success" onclick="changePageNumber({{ page_obj.next_page_number }})">next</button>
+                        <button class="btn btn-success" onclick="changePageNumber({{ page_obj.paginator.num_pages }})">last &raquo;</button>
+                    {% endif %}
+                </span>
+            </div>
         </div>
         <div class="col-sm-2 sidenav">
           <div class="well">
@@ -112,4 +141,5 @@
 
 {% block scripts %}
 <script type="text/javascript" src="{% static 'js/add_product_to_basket.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/filtration_products.js' %}"></script>
 {% endblock scripts %}

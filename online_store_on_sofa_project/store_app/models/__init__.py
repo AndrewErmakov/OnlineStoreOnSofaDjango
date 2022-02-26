@@ -1,4 +1,4 @@
-from .CartUser import CartUser
+from .Cart import Cart
 from .Comment import Comment
 from .FeedBackWithClient import FeedBackWithClient
 from .ImageProduct import ImageProduct
@@ -7,5 +7,5 @@ from .Product import Product
 from .ProductsInOrder import ProductsInOrder
 from .ProductInCart import ProductInCart
 from .Recipient import Recipient
-from .Rubric import Rubric
-from .WarehouseProducts import WarehouseProducts
+from .Category import Category
+from .Warehouse import Warehouse

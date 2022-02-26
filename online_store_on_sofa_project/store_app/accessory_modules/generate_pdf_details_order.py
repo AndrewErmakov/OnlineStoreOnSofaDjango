@@ -70,13 +70,13 @@ class GeneratePdfDetailsOrder:
 
         for product_in_order in need_order.productsinorder_set.all():
             data_to_table.append(
-                [product_in_order.product.title,
+                [product_in_order.product.name,
                  product_in_order.product.price,
                  product_in_order.count_product_in_order,
                  product_in_order.count_product_in_order * product_in_order.product.price
                  ]
             )
-        data_to_table.append(['Итого', need_order.total_sum])
+        data_to_table.append(['Итого', need_order.total_price])
 
         generated_table = Table(data_to_table)
         table_style = TableStyle(
