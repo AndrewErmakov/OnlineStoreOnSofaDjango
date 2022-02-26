@@ -21,7 +21,7 @@ class ChangeCharacteristicsProductView(View, HasPermissionsMixin):
     def post(self, request, pk):
         try:
             product = Product.objects.get(pk=pk)
-            product.title = request.POST.get('title')
+            product.name = request.POST.get('title')
             product.description = request.POST.get('description')
             product.price = request.POST.get('price')
             product.brand = request.POST.get('brand')

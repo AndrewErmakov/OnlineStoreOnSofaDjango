@@ -4,9 +4,9 @@ from store_app.models import *
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'price', 'sale_start_time', 'rubric', 'avg_rating')
-    list_display_links = ('title', 'description')
-    search_fields = ('title', 'description', 'price', 'rubric', 'avg_rating')
+    list_display = ('name', 'description', 'price', 'sale_start_time', 'category', 'avg_rating')
+    list_display_links = ('name', 'description')
+    search_fields = ('name', 'description', 'price', 'category', 'avg_rating')
     date_hierarchy = 'sale_start_time'
 
 
@@ -19,39 +19,39 @@ class ImageProductAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('product', 'text_comment', 'author_comment', 'rating', 'date_comment')
-    list_display_links = ['product', 'text_comment']
-    search_fields = ('product', 'text_comment', 'author_comment', 'rating',)
+    list_display = ('product', 'text', 'author', 'rating', 'created_at')
+    list_display_links = ['product', 'text']
+    search_fields = ('product', 'text', 'author', 'rating',)
 
 
-@admin.register(WarehouseProducts)
-class WarehouseProductsAdmin(admin.ModelAdmin):
-    list_display = ('product', 'count_products')
-    list_display_links = ['product', 'count_products']
-    search_fields = ('product', 'count_products',)
+@admin.register(Warehouse)
+class WarehouseAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity')
+    list_display_links = ['product', 'quantity']
+    search_fields = ('product', 'quantity',)
 
 
-@admin.register(CartUser)
-class CartUserAdmin(admin.ModelAdmin):
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
     list_display = ['user']
     list_display_links = ['user']
     search_fields = ('products', 'user',)
 
 
 @admin.register(ProductInCart)
-class CountProductInCartAdmin(admin.ModelAdmin):
-    list_display = ('product', 'count_product_in_cart', 'cart_user')
+class ProductInCartAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity', 'cart')
     list_display_links = ['product']
-    search_fields = ('product', 'count_product_in_cart',)
+    search_fields = ('product', 'quantity',)
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['num_order', 'created_at', 'recipient', 'buyer_email', 'total_sum', 'payment_method',
+    list_display = ['num_order', 'created_at', 'recipient', 'buyer_email', 'total_price', 'payment_method',
                     'method_receive_order', 'date_order']
-    list_display_links = ['num_order', 'created_at', 'recipient', 'buyer_email', 'total_sum', 'payment_method',
+    list_display_links = ['num_order', 'created_at', 'recipient', 'buyer_email', 'total_price', 'payment_method',
                           'method_receive_order', 'date_order']
-    search_fields = ('num_order', 'created_at', 'recipient', 'buyer_email', 'total_sum', 'payment_method',
+    search_fields = ('num_order', 'created_at', 'recipient', 'buyer_email', 'total_price', 'payment_method',
                      'method_receive_order', 'date_order')
 
 
@@ -76,4 +76,4 @@ class FeedbackAdmin(admin.ModelAdmin):
     search_fields = ('name_client', 'phone_client', 'email_client', 'question_client', 'given_feedback')
 
 
-admin.site.register(Rubric)
+admin.site.register(Category)

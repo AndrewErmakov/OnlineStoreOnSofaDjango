@@ -36,19 +36,19 @@ class OrderingPaymentDeliveryView(View, LoginRequiredMixin):
                 total_sum = 0
                 for product in request.user.cartuser.products.all():
                     product_in_cart = ProductInCart.objects.get(product=product, cart_user=cart_user)
-                    total_sum += product_in_cart.count_product_in_cart * product.price
+                    total_sum += product_in_cart.quantity * product.price
 
                     """Теперь сохраним товары в таблицу БД ProductsInOrder"""
                     ProductsInOrder.objects.create(
                         order=order,
                         product=product,
-                        count_product_in_order=product_in_cart.count_product_in_cart
+                        count_product_in_order=product_in_cart.quantity
                     )
 
                     """Удалим товар из таблицы ProductsInCart"""
                     product_in_cart.delete()
 
-                order.total_sum = total_sum
+                order.total_price = total_sum
                 order.save()
 
                 """Очистим таблицу пользователя"""

@@ -18,4 +18,4 @@ class ImageProduct(models.Model):
         ordering = ['product']
 
     def __str__(self):
-        return self.product.title
+        return self.product.name

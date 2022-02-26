@@ -13,21 +13,18 @@ function selectSorting() {
     window.location.href = currentUrl;
 }
 
-function selectRubric() {
+function selectCategory() {
     let currentUrl = new URL(window.location.href);
-    let selectedRubric = document.getElementById("selectRubric").value;
+    let selectedCategory = document.getElementById("selectCategory").value;
 
-    if (selectedRubric === 'all' && currentUrl.searchParams.has('rubric')) {
-        currentUrl.searchParams.delete('rubric')
+    if (selectedCategory === 'all' && currentUrl.searchParams.has('category')) {
+        currentUrl.searchParams.delete('category')
     }
-    if (currentUrl.searchParams.has('rubric')) {
-        currentUrl.searchParams.set('rubric', selectedRubric);
+    if (currentUrl.searchParams.has('category')) {
+        currentUrl.searchParams.set('category', selectedCategory);
     } else {
-        currentUrl.searchParams.append('rubric', selectedRubric);
+        currentUrl.searchParams.append('category', selectedCategory);
     }
-    let option = document.getElementById('rubric_' + selectedRubric);
-    option.setAttribute('selected', true);
-
     window.location.href = currentUrl;
 }
 
@@ -42,4 +39,15 @@ function searchProduct() {
         }
         window.location.href = currentUrl;
     }
+}
+
+function changePageNumber(pageNum) {
+    pageNum = String(pageNum);
+    let currentUrl = new URL(window.location.href);
+    if (currentUrl.searchParams.has('page')) {
+        currentUrl.searchParams.set('page', pageNum);
+    } else {
+        currentUrl.searchParams.append('page', pageNum);
+    }
+    window.location.href = currentUrl;
 }

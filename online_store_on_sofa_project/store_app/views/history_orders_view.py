@@ -13,7 +13,7 @@ class HistoryOrdersView(View, LoginRequiredMixin):
         try:
             return render(
                 request=request,
-                template_name='order_history_page.html',
+                template_name='order_history.html',
                 context={'orders': Order.objects.filter(buyer_email=request.user.email)}
             )
         except Exception as e:

@@ -2,11 +2,12 @@ from django.core import validators
 from django.db import models
 
 
-class Rubric(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название рубрики',
                             validators=[validators.MinLengthValidator(3)])
 
     class Meta:
+        db_table = 'category'
         verbose_name_plural = 'Рубрики'
         verbose_name = 'Рубрика'
         ordering = ['name']
