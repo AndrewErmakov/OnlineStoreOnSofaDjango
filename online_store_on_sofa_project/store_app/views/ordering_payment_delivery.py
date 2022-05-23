@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from store_app.accessory_modules import encryption_number_order
-from store_app.models import Recipient, Order, ProductInCart, ProductsInOrder
+from store_app.models import Recipient, Order, ProductInCart, OrderProduct
 
 
 class OrderingPaymentDeliveryView(View, LoginRequiredMixin):
@@ -19,9 +19,9 @@ class OrderingPaymentDeliveryView(View, LoginRequiredMixin):
         try:
             with transaction.atomic():
                 recipient = Recipient.objects.create(
-                    name_recipient=request.POST.get('name_recipient'),
-                    surname_recipient=request.POST.get('surname_recipient'),
-                    phone_recipient=request.POST.get('phone')
+                    name=request.POST.get('name_recipient'),
+                    surname=request.POST.get('surname_recipient'),
+                    phone=request.POST.get('phone')
                 )
                 order = Order.objects.create(
                     recipient=recipient,
@@ -32,17 +32,17 @@ class OrderingPaymentDeliveryView(View, LoginRequiredMixin):
                 order.num_order = str(order.pk).zfill(6)
 
                 """Находим корзину пользователя и товары в ней"""
-                cart_user = request.user.cartuser
+                cart_user = request.user.cart
                 total_sum = 0
-                for product in request.user.cartuser.products.all():
-                    product_in_cart = ProductInCart.objects.get(product=product, cart_user=cart_user)
+                for product in cart_user.products.all():
+                    product_in_cart = ProductInCart.objects.get(product=product, cart=cart_user)
                     total_sum += product_in_cart.quantity * product.price
 
                     """Теперь сохраним товары в таблицу БД ProductsInOrder"""
-                    ProductsInOrder.objects.create(
+                    OrderProduct.objects.create(
                         order=order,
                         product=product,
-                        count_product_in_order=product_in_cart.quantity
+                        quantity=product_in_cart.quantity
                     )
 
                     """Удалим товар из таблицы ProductsInCart"""

@@ -10,15 +10,13 @@ class CartView(View, LoginRequiredMixin):
 
     def get(self, request):
         try:
-            cart_current_user = Cart.objects.filter(user=request.user)
-            if len(cart_current_user) != 0:
-                cart_current_user = cart_current_user[0]
+            cart_current_user = Cart.objects.filter(user=request.user).first()
+            if cart_current_user:
                 products_in_cart = cart_current_user.products.all()
                 count_each_product = {}
                 total_sum = 0
                 for product in products_in_cart:
-                    product_in_cart = ProductInCart.objects.filter(cart_user=cart_current_user,
-                                                                   product=product)[0]
+                    product_in_cart = ProductInCart.objects.filter(cart=cart_current_user, product=product).first()
                     count_each_product[product.pk] = [product_in_cart.quantity]
                     count_each_product[product.pk].append(product_in_cart.quantity * product.price)
                     total_sum += product_in_cart.quantity * product.price

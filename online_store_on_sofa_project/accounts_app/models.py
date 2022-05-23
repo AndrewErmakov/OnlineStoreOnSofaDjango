@@ -14,6 +14,3 @@ class RegistrationConfirmationByEmail(models.Model):
 
     def __str__(self):
         return self.user.username
-
-
-

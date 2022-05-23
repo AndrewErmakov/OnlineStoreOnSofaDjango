@@ -9,9 +9,11 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Table, TableStyle, Spacer, SimpleDocTemplate
 from reportlab.platypus.para import Paragraph
 
+from store_app.models import Order
+
 
 class GeneratePdfDetailsOrder:
-    def __init__(self, order, num_order):
+    def __init__(self, order: Order, num_order: str):
         self.order = order
         self.num_order = num_order
 
@@ -34,7 +36,7 @@ class GeneratePdfDetailsOrder:
         for i in range(4):
             self.add_paragraph(mapping_info_order[i][0], mapping_info_order[i][1])
 
-        table = self.fill_and_generate_table(need_order=self.order, need_font='FreeSans')
+        table = self.fill_and_generate_table(order=self.order, need_font='FreeSans')
         self.report_elements.append(table)
 
         """ Создание объект PDF, используя буфер в качестве своего «файла»."""
@@ -62,21 +64,24 @@ class GeneratePdfDetailsOrder:
         return need_styles
 
     @staticmethod
-    def fill_and_generate_table(need_order, need_font):
-        """Генерация данных для таблицы: инфо о товарах  в заказе"""
+    def fill_and_generate_table(order: Order, need_font):
+        """
+            Генерация данных для таблицы: инфо о товарах в заказе
+        """
         data_to_table = [
             ['Наименование товара', 'Цена товара', 'Количество', 'Сумма в рублях']
         ]
 
-        for product_in_order in need_order.productsinorder_set.all():
+        for product_in_order in order.product_in_order.all():
             data_to_table.append(
-                [product_in_order.product.name,
-                 product_in_order.product.price,
-                 product_in_order.count_product_in_order,
-                 product_in_order.count_product_in_order * product_in_order.product.price
-                 ]
+                [
+                    product_in_order.product.name,
+                    product_in_order.product.price,
+                    product_in_order.quantity,
+                    product_in_order.quantity * product_in_order.product.price
+                ]
             )
-        data_to_table.append(['Итого', need_order.total_price])
+        data_to_table.append(['Итого', order.total_price])
 
         generated_table = Table(data_to_table)
         table_style = TableStyle(
@@ -92,4 +97,3 @@ class GeneratePdfDetailsOrder:
     def add_paragraph(self, info, style):
         self.report_elements.append(Paragraph(info, style))
         self.report_elements.append(Spacer(1, 10))
-

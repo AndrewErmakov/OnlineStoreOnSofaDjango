@@ -16,4 +16,3 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return self.product.name + ' с количеством ' + str(self.quantity)
-

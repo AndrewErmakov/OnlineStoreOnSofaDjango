@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views import View
 from rolepermissions.mixins import HasPermissionsMixin
-from store_app.models import FeedBackWithClient
+from store_app.models import ClientFeedback
 from django.core.mail import send_mail
 from online_store_on_sofa_project.settings import EMAIL_HOST_USER
 
@@ -15,7 +15,7 @@ class SendAnswerToClientFeedbackClaim(HasPermissionsMixin, View):
             request_feedback_id = int(request.POST.get('request_feedback_id'))
             text_answer = request.POST.get('text_answer')
 
-            feedback_request = FeedBackWithClient.objects.get(id=request_feedback_id)
+            feedback_request = ClientFeedback.objects.get(id=request_feedback_id)
             feedback_request.given_feedback = True
             feedback_request.save()
 
@@ -24,7 +24,7 @@ class SendAnswerToClientFeedbackClaim(HasPermissionsMixin, View):
             send_mail(subject=f'Заявка на обратную связь №{request_feedback_id}',
                       message=text_answer,
                       from_email=EMAIL_HOST_USER,
-                      recipient_list=[feedback_request.email_client])
+                      recipient_list=[feedback_request.email])
             return JsonResponse(response_data)
 
         except Exception as e:

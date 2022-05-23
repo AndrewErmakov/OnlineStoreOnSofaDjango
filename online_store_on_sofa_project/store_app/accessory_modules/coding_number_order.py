@@ -11,4 +11,3 @@ def encryption_number_order(order_number):
 def decryption_number_order(encrypted_order_num, key):
     decoded_order_number = str(encrypted_order_num - key).zfill(6)
     return decoded_order_number
-

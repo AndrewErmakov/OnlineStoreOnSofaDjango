@@ -1,22 +1,23 @@
 import stripe
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.views import View
-from django.conf import settings
+
 
 from store_app.accessory_modules import encryption_number_order
-from store_app.models import Recipient, Order, ProductInCart, ProductsInOrder
+from store_app.models import Recipient, Order, ProductInCart, OrderProduct
 
 
 class OrderingPaymentOnlineView(View, LoginRequiredMixin):
     def get(self, request):
         try:
             total_sum = 0
-            for product_in_cart in ProductInCart.objects.filter(cart_user__user=request.user):
+            for product_in_cart in ProductInCart.objects.filter(cart=request.user.cart):
                 total_sum += product_in_cart.product.price * product_in_cart.quantity
 
-            stripe.api_key = settings.STRIPE_PUBLISHABLE_KEY
+            stripe.api_key = settings.STRIPE_SECRET_KEY
             intent = stripe.PaymentIntent.create(
                 amount=int(total_sum * 100),
                 currency='rub',
@@ -52,7 +53,7 @@ class OrderingPaymentOnlineView(View, LoginRequiredMixin):
                     total_sum += product_in_cart.quantity * product.price
 
                     """Теперь сохраним товары в таблицу БД ProductsInOrder"""
-                    ProductsInOrder.objects.create(
+                    OrderProduct.objects.create(
                         order=order,
                         product=product,
                         count_product_in_order=product_in_cart.quantity
