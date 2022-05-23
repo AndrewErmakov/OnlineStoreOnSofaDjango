@@ -14,7 +14,7 @@ class IncreaseCountProductsView(View, LoginRequiredMixin):
         try:
             product = Product.objects.get(pk=request.POST.get('product_id'))
 
-            product_in_cart = ProductInCart.objects.get(cart_user=Cart.objects.get(user=request.user),
+            product_in_cart = ProductInCart.objects.get(cart=request.user.cart,
                                                         product=product)
 
             """Проверка наличия еще 1 экземпляра товара"""
@@ -29,9 +29,9 @@ class IncreaseCountProductsView(View, LoginRequiredMixin):
                     product_in_warehouse.quantity -= 1
                     product_in_warehouse.save()
 
-                    response_data['status'] = 'OK'
-                    response_data['id'] = request.POST.get('product_id')
-                    response_data['price'] = product.price
+                response_data['status'] = 'OK'
+                response_data['id'] = request.POST.get('product_id')
+                response_data['price'] = product.price
             else:
                 """Товар на складе нет"""
                 response_data['status'] = 'Not available'

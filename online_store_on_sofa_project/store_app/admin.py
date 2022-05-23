@@ -1,5 +1,6 @@
 from django.contrib import admin
-from store_app.models import *
+from store_app.models import Product, ImageProduct, Comment, Warehouse, Cart, ProductInCart, Order, Recipient, \
+    OrderProduct, ClientFeedback, Category
 
 
 @admin.register(Product)
@@ -57,23 +58,23 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Recipient)
 class RecipientAdmin(admin.ModelAdmin):
-    list_display = ['name_recipient', 'surname_recipient', 'phone_recipient']
-    list_display_links = ['name_recipient', 'surname_recipient', 'phone_recipient']
-    search_fields = ('name_recipient', 'surname_recipient', 'phone_recipient',)
+    list_display = ['name', 'surname', 'phone']
+    list_display_links = ['name', 'surname', 'phone']
+    search_fields = ('name', 'surname', 'phone', )
 
 
-@admin.register(ProductsInOrder)
-class CountProductInOrderAdmin(admin.ModelAdmin):
-    list_display = ['product', 'count_product_in_order', 'order']
-    list_display_links = ['product', 'count_product_in_order']
-    search_fields = ('product', 'count_product_in_order', 'order')
+@admin.register(OrderProduct)
+class ProductInOrderAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity', 'order')
+    list_display_links = ('product', 'quantity')
+    search_fields = ('product', 'quantity', 'order')
 
 
-@admin.register(FeedBackWithClient)
+@admin.register(ClientFeedback)
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ['name_client', 'phone_client', 'email_client', 'question_client', 'given_feedback']
-    list_display_links = ['name_client', 'phone_client', 'email_client', 'question_client', 'given_feedback']
-    search_fields = ('name_client', 'phone_client', 'email_client', 'question_client', 'given_feedback')
+    list_display = ('name', 'phone', 'email', 'question', 'given_feedback')
+    list_display_links = ('name', 'phone', 'email', 'question', 'given_feedback')
+    search_fields = ('name', 'phone', 'email', 'question', 'given_feedback')
 
 
 admin.site.register(Category)

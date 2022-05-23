@@ -31,4 +31,3 @@ class ChangeCharacteristicsProductView(View, HasPermissionsMixin):
         except Exception as e:
             print(e)
             return redirect('home')
-

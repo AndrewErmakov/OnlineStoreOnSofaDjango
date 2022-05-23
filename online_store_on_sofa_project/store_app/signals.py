@@ -8,8 +8,7 @@ from store_app.models import Comment
 def post_save_comment(sender, instance, created, **kwargs):
     """Сигналы после добавления комментария"""
     product = instance.product
-    product.count_reviews += 1
-    product.avg_rating = product.comment_set.all().aggregate(Avg('rating'))['rating__avg']
+    product.avg_rating = product.comments.all().aggregate(Avg('rating'))['rating__avg']
     product.save()
 
 

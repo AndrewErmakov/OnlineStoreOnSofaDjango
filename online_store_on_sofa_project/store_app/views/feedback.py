@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import FeedBackWithClient
+from store_app.models import ClientFeedback
 
 
 class FeedbackView(View):
@@ -10,7 +10,7 @@ class FeedbackView(View):
     def post(self, request):
         response_data = {}
         try:
-            FeedBackWithClient.objects.create(
+            ClientFeedback.objects.create(
                 name_client=request.POST.get('name'),
                 phone_client=request.POST.get('phone'),
                 email_client=request.POST.get('email'),
