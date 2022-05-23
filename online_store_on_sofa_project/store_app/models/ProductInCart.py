@@ -9,8 +9,11 @@ class ProductInCart(models.Model):
     cart = models.ForeignKey(
         to=Cart,
         on_delete=models.CASCADE,
-        verbose_name='Никнейм пользователя - владельца корзины',
-        blank=True, null=True)
+        verbose_name='Корзина',
+        blank=True,
+        null=True,
+        related_name='product_in_cart'
+    )
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Название товара')
     quantity = models.PositiveIntegerField(default=1, verbose_name='Количество данного товара')
 

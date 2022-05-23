@@ -15,8 +15,12 @@ class AddCommentView(LoginRequiredMixin, View):
             text_comment = request.POST.get('text_comment')
             commented_product = Product.objects.get(pk=request.POST.get('product_id'))
 
-            Comment.objects.create(rating=int(rating), text_comment=text_comment,
-                                   author_comment=request.user, product=commented_product)
+            Comment.objects.create(
+                rating=int(rating),
+                text=text_comment,
+                author=request.user,
+                product=commented_product
+            )
 
             response_data['status'] = 'OK'
             response_data['rating'] = rating

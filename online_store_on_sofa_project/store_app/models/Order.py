@@ -18,7 +18,11 @@ class Order(models.Model):
         db_index=True
     )
 
-    recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE, verbose_name='Получатель')
+    recipient = models.ForeignKey(
+        to=Recipient,
+        on_delete=models.CASCADE,
+        verbose_name='Получатель'
+    )
     buyer_email = models.EmailField(verbose_name='Электронная почта покупателя')
 
     total_price = models.DecimalField(

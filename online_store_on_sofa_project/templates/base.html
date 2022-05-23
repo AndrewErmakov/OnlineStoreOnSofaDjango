@@ -32,7 +32,7 @@
                                 <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-in"></span>Выйти из аккаунта</a></li>
                             </ul>
                         </li>
-                        <li><a href="{% url 'user_cart_page'%}"><span class="glyphicon glyphicon-shopping-cart"></span>Корзина</a></li>
+                        <li><a href="{% url 'user_cart_page' %}"><span class="glyphicon glyphicon-shopping-cart"></span>Корзина</a></li>
                     {% else %}
                         <li><a href="{% url 'signup' %}"><span class="glyphicon glyphicon-user"></span>Sign Up</a></li>
                         <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>

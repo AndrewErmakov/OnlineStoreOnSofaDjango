@@ -45,7 +45,12 @@ class SignUpView(View):
                 secret_code = self.generate_secret_code()
                 self.save_registration_attempt(user=user, code=secret_code)
 
-                data = {'email': email, 'first_name': first_name, 'last_name': last_name, 'code': secret_code}
+                data = {
+                    'email': email,
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'code': secret_code
+                }
                 self.send_letter_confirm_registration(data)
 
                 return redirect('activate_account')
