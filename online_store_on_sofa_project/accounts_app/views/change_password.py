@@ -25,10 +25,10 @@ class ChangePasswordView(View, LoginRequiredMixin):
             return redirect('login')
 
     def post(self, request):
-        change_password_form = ChangePasswordForm(request.POST)
-        if change_password_form.is_valid():
-            if request.user.check_password(change_password_form.cleaned_data['old_password']):
-                request.user.set_password(change_password_form.cleaned_data['new_password'])
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            if request.user.check_password(form.cleaned_data['old_password']):
+                request.user.set_password(form.cleaned_data['new_password'])
                 request.user.save()
                 login(request, request.user)
                 return redirect('home')

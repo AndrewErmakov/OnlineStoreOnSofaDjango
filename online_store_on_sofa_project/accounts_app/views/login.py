@@ -16,8 +16,7 @@ class LoginView(View):
         if request.user.is_authenticated:
             redirect('home')
         else:
-            login_form = LoginForm()
-            context = {'form': login_form}
+            context = {'form': LoginForm()}
             if kwargs:
                 context.update(kwargs)
             return render(request, 'login.html', context)
