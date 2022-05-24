@@ -12,19 +12,20 @@ class ActivateAccountView(View):
 
     def get(self, request):
         if request.user.is_anonymous:
-            account_activation_form = ActivationAccountForm()
-            return render(request, 'activate_account.html', {'form': account_activation_form})
+            form = ActivationAccountForm()
+            return render(request, 'activate_account.html', {'form': form})
         else:
             return redirect('home')
 
     def post(self, request):
-        account_activation_form = ActivationAccountForm(request.POST)
-        if account_activation_form.is_valid():
-            email = account_activation_form.cleaned_data['email']
-            code = account_activation_form.cleaned_data['activation_code']
+        form = ActivationAccountForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            code = form.cleaned_data['activation_code']
 
-            user_activation = RegistrationConfirmationByEmail.objects.get(
-                user=User.objects.get(email=email))
+            user_activation = RegistrationConfirmationByEmail.objects.filter(
+                user=User.objects.get(email=email)
+            ).first()
 
             if user_activation is not None and user_activation.activation_code == code:
                 user_activation.is_confirmed = True

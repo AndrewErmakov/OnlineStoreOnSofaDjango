@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
 
     # third-party apps
+    'django_extensions',
     'crispy_forms',
     'captcha',  # simple captcha
     'rolepermissions',
@@ -159,5 +160,25 @@ ROLEPERMISSIONS_MODULE = 'online_store_on_sofa_project.roles'
 ROLEPERMISSIONS_REGISTER_ADMIN = True
 # ROLEPERMISSIONS_SUPERUSER_SUPERPOWERS = False
 
+"""
+    STRIPE KEYS
+"""
 STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+
+"""
+    CELERY SETTINGS
+"""
+REDIS_HOST = os.environ.get('REDIS_HOST')
+REDIS_PORT = os.environ.get('REDIS_PORT')
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'visibility_timeout': 3600
+}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_TIMEZONE = os.environ.get('TIME_ZONE')
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

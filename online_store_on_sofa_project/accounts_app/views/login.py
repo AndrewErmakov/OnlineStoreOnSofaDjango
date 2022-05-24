@@ -12,36 +12,36 @@ class LoginView(View):
     и пользователь подтвердил его с помощью электронной почты
     """
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             redirect('home')
         else:
             login_form = LoginForm()
-            return render(request, 'login.html', {'form': login_form})
+            context = {'form': login_form}
+            if kwargs:
+                context.update(kwargs)
+            return render(request, 'login.html', context)
 
     def post(self, request):
-        login_form = LoginForm(request.POST)
-        if login_form.is_valid():
-            username = login_form.cleaned_data['username']
-            password = login_form.cleaned_data['password']
+        error = None
+        form = LoginForm(request.POST)
+        if form.is_valid():
 
-            user = authenticate(username=username, password=password)
+            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user is not None:
                 if user.is_superuser:
                     login(request, user)
                     return redirect('home')
 
-                activation_state = RegistrationConfirmationByEmail.objects.get(user=user)
+                activation_state = RegistrationConfirmationByEmail.objects.filter(user=user).first()
                 if activation_state is not None:
                     if activation_state.is_confirmed:
                         login(request, user)
                         return redirect('home')
                     else:
                         return redirect('activate_account')
-                else:
-                    return redirect('signup')
             else:
-                redirect('signup')
-
+                error = 'Введены неправильный логин и/или пароль'
         else:
-            return self.get(request)
+            error = 'Возможно неправильно введены символы с капчи'
+        return self.get(request, error=error)

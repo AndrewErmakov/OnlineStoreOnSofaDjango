@@ -1,3 +1,5 @@
+from django.contrib.auth import login
+
 from accounts_app.forms import ChangePasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -6,8 +8,10 @@ from django.views import View
 
 
 class ChangePasswordView(View, LoginRequiredMixin):
-    """Класс страницы смены пароля авторизованным пользователем,
-    если он не авторизован - попадает на страницу входа в аккаунт"""
+    """
+        Класс страницы смены пароля авторизованным пользователем,
+        если он не авторизован - попадает на страницу входа в аккаунт
+    """
 
     raise_exception = True
 
@@ -26,6 +30,7 @@ class ChangePasswordView(View, LoginRequiredMixin):
             if request.user.check_password(change_password_form.cleaned_data['old_password']):
                 request.user.set_password(change_password_form.cleaned_data['new_password'])
                 request.user.save()
+                login(request, request.user)
                 return redirect('home')
             else:
                 return render(request, 'change_password.html', {'form': ChangePasswordForm(request.GET),
