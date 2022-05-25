@@ -2,10 +2,8 @@ import random
 import string
 
 from django.contrib.auth.models import User
-from django.core.mail import EmailMultiAlternatives
 from django.db import transaction
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.views import View
 
 from accounts_app.forms import RegisterForm
