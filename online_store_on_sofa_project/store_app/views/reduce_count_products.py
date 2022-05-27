@@ -3,10 +3,10 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import Product, ProductInCart, Cart, Warehouse
+from store_app.models import Product, ProductInCart, Warehouse
 
 
-class ReduceCountProductsView(View, LoginRequiredMixin):
+class ReduceCountProductsView(LoginRequiredMixin, View):
     """Уменьшение числа одной позиции товара в корзине на 1"""
 
     def post(self, request):

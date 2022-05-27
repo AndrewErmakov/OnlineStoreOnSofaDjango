@@ -3,12 +3,12 @@ import string
 
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
 
-from accounts_app.forms import RegisterForm
-from accounts_app.models import RegistrationConfirmationByEmail
-from accounts_app.tasks import send_letter_confirm_registration
+from ..forms import RegisterForm
+from ..models import RegistrationConfirmationByEmail
+from ..tasks import send_letter_confirm_registration
 
 
 class SignUpView(View):
@@ -18,8 +18,11 @@ class SignUpView(View):
 
     def get(self, request):
         if request.user.is_anonymous:
-            form = RegisterForm()
-            return render(request, 'signup.html', {'form': form})
+            return render(
+                request=request,
+                template_name='signup.html',
+                context={'form': RegisterForm()},
+            )
         else:
             return redirect('home')
 
@@ -40,7 +43,7 @@ class SignUpView(View):
                         email=email,
                         password=password,
                         first_name=first_name,
-                        last_name=last_name
+                        last_name=last_name,
                     )
 
                     secret_code = self.generate_secret_code()
@@ -50,7 +53,7 @@ class SignUpView(View):
                         'email': email,
                         'first_name': first_name,
                         'last_name': last_name,
-                        'code': secret_code
+                        'code': secret_code,
                     }
                     send_letter_confirm_registration.delay(data)
 
@@ -71,5 +74,3 @@ class SignUpView(View):
         registration_attempt.user = user
         registration_attempt.activation_code = code
         registration_attempt.save()
-
-

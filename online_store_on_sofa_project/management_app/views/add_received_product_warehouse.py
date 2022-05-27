@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
+
 from rolepermissions.mixins import HasPermissionsMixin
+
 from store_app.models import Product, Warehouse
 
 

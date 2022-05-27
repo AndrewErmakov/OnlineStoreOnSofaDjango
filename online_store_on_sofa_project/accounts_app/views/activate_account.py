@@ -1,8 +1,9 @@
-from accounts_app.forms import ActivationAccountForm
-from accounts_app.models import RegistrationConfirmationByEmail
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
+
+from ..forms import ActivationAccountForm
+from ..models import RegistrationConfirmationByEmail
 
 
 class ActivateAccountView(View):
@@ -12,8 +13,11 @@ class ActivateAccountView(View):
 
     def get(self, request):
         if request.user.is_anonymous:
-            form = ActivationAccountForm()
-            return render(request, 'activate_account.html', {'form': form})
+            return render(
+                request=request,
+                template_name='activate_account.html',
+                context={'form': ActivationAccountForm()},
+            )
         else:
             return redirect('home')
 
@@ -24,7 +28,7 @@ class ActivateAccountView(View):
             code = form.cleaned_data['activation_code']
 
             user_activation = RegistrationConfirmationByEmail.objects.filter(
-                user=User.objects.get(email=email)
+                user=User.objects.get(email=email),
             ).first()
 
             if user_activation is not None and user_activation.activation_code == code:

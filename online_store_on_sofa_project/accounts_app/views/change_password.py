@@ -1,10 +1,10 @@
 from django.contrib.auth import login
-
-from accounts_app.forms import ChangePasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
+
+from ..forms import ChangePasswordForm
 
 
 class ChangePasswordView(View, LoginRequiredMixin):
@@ -33,7 +33,14 @@ class ChangePasswordView(View, LoginRequiredMixin):
                 login(request, request.user)
                 return redirect('home')
             else:
-                return render(request, 'change_password.html', {'form': ChangePasswordForm(request.GET),
-                                                                'title': 'Смена пароля. Попытайтесь еще раз'})
+                context = {
+                    'form': ChangePasswordForm(request.GET),
+                    'title': 'Смена пароля. Попытайтесь еще раз',
+                }
+                return render(
+                    request=request,
+                    template_name='change_password.html',
+                    context=context,
+                )
         else:
             self.get(request)

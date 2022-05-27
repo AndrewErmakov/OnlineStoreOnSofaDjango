@@ -23,4 +23,3 @@ class TopManager(AbstractUserRole):
         'change_info_existing_products': True,
         'get_analytics': True,
     }
-

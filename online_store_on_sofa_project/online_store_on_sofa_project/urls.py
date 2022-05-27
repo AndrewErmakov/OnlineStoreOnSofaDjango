@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -8,5 +8,3 @@ urlpatterns = [
     path('captcha/', include('captcha.urls')),
     path('management/', include('management_app.urls')),
 ]
-handler403 = 'store_app.views.error_403'
-handler404 = 'store_app.views.error_404'

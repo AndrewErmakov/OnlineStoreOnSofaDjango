@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
+
 from rolepermissions.mixins import HasPermissionsMixin
-from management_app.forms import NewProductImageForm
+
+from ..forms import NewProductImageForm
 
 
 class AddProductImageView(View, HasPermissionsMixin):
@@ -12,7 +14,7 @@ class AddProductImageView(View, HasPermissionsMixin):
             return render(
                 request=request,
                 template_name='add_images_for_product.html',
-                context={'form': NewProductImageForm()}
+                context={'form': NewProductImageForm()},
             )
         except Exception as e:
             print(e)

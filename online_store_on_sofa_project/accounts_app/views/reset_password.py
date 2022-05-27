@@ -1,12 +1,12 @@
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.views import View
 
-from accounts_app.tasks import send_letter_reset_password
+from ..tasks import send_letter_reset_password
 
 
 class ResetPasswordView(View):
@@ -44,6 +44,6 @@ class ResetPasswordView(View):
                 except Exception as e:
                     return self.get(request, error=e)
             else:
-                error = f'Пользователя с электронной почтой {form.cleaned_data["email"]} нет в базе данных'
+                error = f'Пользователя с электронной почтой {form.cleaned_data["email"]} ' \
+                        f'нет в базе данных'
             return self.get(request, error=error)
-

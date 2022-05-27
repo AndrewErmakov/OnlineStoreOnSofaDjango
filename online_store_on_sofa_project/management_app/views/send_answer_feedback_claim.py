@@ -1,10 +1,13 @@
+from django.conf import settings
 from django.db import transaction
 from django.http import JsonResponse
 from django.views import View
+
 from rolepermissions.mixins import HasPermissionsMixin
+
 from store_app.models import ClientFeedback
-from django.core.mail import send_mail
-from online_store_on_sofa_project.settings import EMAIL_HOST_USER
+
+from ..tasks import give_feedback
 
 
 class SendAnswerToClientFeedbackClaim(HasPermissionsMixin, View):
@@ -13,7 +16,7 @@ class SendAnswerToClientFeedbackClaim(HasPermissionsMixin, View):
     def post(self, request):
         response_data = {}
         try:
-            request_feedback_id = int(request.POST.get('request_feedback_id'))
+            request_feedback_id = request.POST.get('request_feedback_id')
             text_answer = request.POST.get('text_answer')
 
             with transaction.atomic():
@@ -23,11 +26,11 @@ class SendAnswerToClientFeedbackClaim(HasPermissionsMixin, View):
 
             response_data['status'] = 'OK'
 
-            send_mail(
-                subject=f'Заявка на обратную связь №{request_feedback_id}',
+            give_feedback.delay(
+                feedback_id=request_feedback_id,
                 message=text_answer,
-                from_email=EMAIL_HOST_USER,
-                recipient_list=[feedback_request.email]
+                from_email=settings.EMAIL_HOST_USER,
+                to_email=feedback_request.email,
             )
             return JsonResponse(response_data)
 

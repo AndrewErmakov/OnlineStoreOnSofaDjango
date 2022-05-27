@@ -11,10 +11,10 @@ class FeedbackView(View):
         response_data = {}
         try:
             ClientFeedback.objects.create(
-                name_client=request.POST.get('name'),
-                phone_client=request.POST.get('phone'),
-                email_client=request.POST.get('email'),
-                question_client=request.POST.get('question')
+                name=request.POST.get('name'),
+                phone=request.POST.get('phone'),
+                email=request.POST.get('email'),
+                question=request.POST.get('question'),
             )
             response_data['status'] = 'OK'
 

@@ -1,9 +1,12 @@
 from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
+
 from rolepermissions.mixins import HasPermissionsMixin
-from management_app.forms import NewProductForm
+
 from store_app.models import Product, Warehouse
+
+from ..forms import NewProductForm
 
 
 class AddProductView(View, HasPermissionsMixin):
@@ -11,8 +14,11 @@ class AddProductView(View, HasPermissionsMixin):
 
     def get(self, request):
         try:
-
-            return render(request, 'add_new_products.html', {'form': NewProductForm()})
+            return render(
+                request=request,
+                template_name='add_new_products.html',
+                context={'form': NewProductForm()},
+            )
         except Exception as e:
             print(e)
             return redirect('home')
@@ -20,7 +26,6 @@ class AddProductView(View, HasPermissionsMixin):
     def post(self, request):
         try:
             form = NewProductForm(request.POST)
-
             if form.is_valid():
                 with transaction.atomic():
                     product = Product.objects.create(
@@ -28,11 +33,11 @@ class AddProductView(View, HasPermissionsMixin):
                         description=form.cleaned_data['description'],
                         price=form.cleaned_data['price'],
                         brand=form.cleaned_data['brand'],
-                        category=form.cleaned_data['category']
+                        category=form.cleaned_data['category'],
                     )
                     Warehouse.objects.create(
                         product=product,
-                        quantity=request.POST.get('count_product', 0)
+                        quantity=request.POST.get('count_product', 0),
                     )
             return redirect('add_images_for_product')
 

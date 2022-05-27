@@ -2,8 +2,8 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect, render
 from django.views import View
 
-from accounts_app.forms import LoginForm
-from accounts_app.models import RegistrationConfirmationByEmail
+from ..forms import LoginForm
+from ..models import RegistrationConfirmationByEmail
 
 
 class LoginView(View):
@@ -26,7 +26,10 @@ class LoginView(View):
         form = LoginForm(request.POST)
         if form.is_valid():
 
-            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password'],
+            )
             if user is not None:
                 if user.is_superuser:
                     login(request, user)
