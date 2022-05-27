@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.views import View
 
-from store_app.models import Product, Category, Warehouse
+from store_app.models import Category, Product, Warehouse
 
 
 class ProductDetailsView(View):
-    """Класс просмотра страницы - подробности о выбранном товаре"""
+    """
+        Детали товара
+    """
 
     def get(self, request, pk):
         product = Product.objects.get(pk=pk)
@@ -14,9 +16,13 @@ class ProductDetailsView(View):
 
         context = {
             'product': product,
-            'rubrics': Category.objects.all(),
+            'categories': Category.objects.all(),
             'presence_flag_comment_user': product.comments.filter(author=request.user).count() > 0,
-            'rating': (0, product.avg_rating)[product.avg_rating >= 0],
+            'rating': product.avg_rating,
             'count_product': product_in_warehouse.quantity if product_in_warehouse else 0,
         }
-        return render(request, 'product_details.html', context)
+        return render(
+            request=request,
+            template_name='product_details.html',
+            context=context,
+        )

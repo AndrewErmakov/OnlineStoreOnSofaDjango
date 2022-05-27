@@ -3,10 +3,10 @@ import io
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import Table, TableStyle, Spacer, SimpleDocTemplate
+from reportlab.platypus import SimpleDocTemplate, Spacer, Table, TableStyle
 from reportlab.platypus.para import Paragraph
 
 from store_app.models import Order
@@ -30,7 +30,7 @@ class GeneratePdfDetailsOrder:
             0: [f'Заказ №{self.num_order}', styles['our_heading']],
             1: [f'Эл.почта покупателя: {self.order.buyer_email}', styles['our_info']],
             2: [f'Получатель: {self.order.recipient}', styles['our_info']],
-            3: [f'Способ оплаты: {self.order.payment_method}', styles['our_info']]
+            3: [f'Способ оплаты: {self.order.payment_method}', styles['our_info']],
         }
 
         for i in range(4):
@@ -59,8 +59,22 @@ class GeneratePdfDetailsOrder:
     def set_need_styles():
         """Установка необходимых стилей для оформления отчета"""
         need_styles = getSampleStyleSheet()
-        need_styles.add(ParagraphStyle(name='our_heading', alignment=TA_CENTER, fontName='FreeSansBold', fontSize=16))
-        need_styles.add(ParagraphStyle(name='our_info', alignment=TA_LEFT, fontName='FreeSans', fontSize=12))
+        need_styles.add(
+            ParagraphStyle(
+                name='our_heading',
+                alignment=TA_CENTER,
+                fontName='FreeSansBold',
+                fontSize=16,
+            ),
+        )
+        need_styles.add(
+            ParagraphStyle(
+                name='our_info',
+                alignment=TA_LEFT,
+                fontName='FreeSans',
+                fontSize=12,
+            ),
+        )
         return need_styles
 
     @staticmethod
@@ -69,7 +83,7 @@ class GeneratePdfDetailsOrder:
             Генерация данных для таблицы: инфо о товарах в заказе
         """
         data_to_table = [
-            ['Наименование товара', 'Цена товара', 'Количество', 'Сумма в рублях']
+            ['Наименование товара', 'Цена товара', 'Количество', 'Сумма в рублях'],
         ]
 
         for product_in_order in order.product_in_order.all():
@@ -78,8 +92,8 @@ class GeneratePdfDetailsOrder:
                     product_in_order.product.name,
                     product_in_order.product.price,
                     product_in_order.quantity,
-                    product_in_order.quantity * product_in_order.product.price
-                ]
+                    product_in_order.quantity * product_in_order.product.price,
+                ],
             )
         data_to_table.append(['Итого', order.total_price])
 
@@ -88,8 +102,8 @@ class GeneratePdfDetailsOrder:
             [
                 ('FONTNAME', (0, 0), (-1, -1), need_font),
                 ('BOX', (0, 0), (-1, -1), 2, colors.black),
-                ('GRID', (0, 0), (-1, -2), 2, colors.black)
-            ]
+                ('GRID', (0, 0), (-1, -2), 2, colors.black),
+            ],
         )
         generated_table.setStyle(table_style)
         return generated_table

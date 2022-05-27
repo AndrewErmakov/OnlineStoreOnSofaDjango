@@ -26,7 +26,7 @@
             <h1>Товар: {{ product.title}}</h1>
             <form action="{% url 'change_characteristics_product' product.pk %}" class="well well-sm" method="POST" id="change">
                 {% csrf_token %}
-                <input type="text" value="{{ product.title}}" name="title" class="form-control"><br>
+                <input type="text" value="{{ product.name}}" name="title" class="form-control"><br>
                 <textarea name="description" class="form-control">{{ product.description }}</textarea><br>
                 <input type="number" min="1" max="1000000000" value="{{ product.price }}" step="1" name="price" class="form-control"><br>
                 <input type="text" value="{{ product.brand}}" name="brand" class="form-control"><br>

@@ -1,34 +1,37 @@
-import stripe
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
 
+import stripe
 
-from store_app.accessory_modules import encryption_number_order
-from store_app.models import Recipient, Order, ProductInCart, OrderProduct
+from ..accessory_modules import encryption_number_order
+from ..models import Order, OrderProduct, ProductInCart, Recipient
 
 
-class OrderingPaymentOnlineView(View, LoginRequiredMixin):
+class OrderingPaymentOnlineView(LoginRequiredMixin, View):
     def get(self, request):
-        try:
-            total_sum = 0
-            for product_in_cart in ProductInCart.objects.filter(cart=request.user.cart):
-                total_sum += product_in_cart.product.price * product_in_cart.quantity
+        total_sum = 0
+        for product_in_cart in ProductInCart.objects.filter(cart=request.user.cart):
+            total_sum += product_in_cart.product.price * product_in_cart.quantity
 
-            stripe.api_key = settings.STRIPE_SECRET_KEY
-            intent = stripe.PaymentIntent.create(
-                amount=int(total_sum * 100),
-                currency='rub',
-                metadata={'integration_check': 'accept_a_payment'}
-            )
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        intent = stripe.PaymentIntent.create(
+            amount=int(total_sum * 100),
+            currency='rub',
+            metadata={'integration_check': 'accept_a_payment'},
+        )
+        context = {
+            'user': request.user,
+            'client_secret': intent.client_secret,
+        }
 
-            return render(request, 'ordering_payment_online.html', {'user': request.user,
-                                                                    'client_secret': intent.client_secret})
-        except Exception as e:
-            print(e)
-            return redirect('home')
+        return render(
+            request=request,
+            template_name='ordering_payment_online.html',
+            context=context,
+        )
 
     def post(self, request):
         try:
@@ -36,12 +39,12 @@ class OrderingPaymentOnlineView(View, LoginRequiredMixin):
                 recipient = Recipient.objects.create(
                     name_recipient=request.POST.get('name_recipient'),
                     surname_recipient=request.POST.get('surname_recipient'),
-                    phone_recipient=request.POST.get('phone')
+                    phone_recipient=request.POST.get('phone'),
                 )
                 order = Order.objects.create(
                     recipient=recipient,
                     buyer_email=request.user.email,
-                    payment_method='Онлайн'
+                    payment_method='Онлайн',
                 )
                 order.num_order = str(order.pk).zfill(6)
 
@@ -49,17 +52,17 @@ class OrderingPaymentOnlineView(View, LoginRequiredMixin):
                 cart_user = request.user.cartuser
                 total_sum = 0
                 for product in request.user.cartuser.products.all():
-                    product_in_cart = ProductInCart.objects.get(product=product, cart_user=cart_user)
+                    product_in_cart = ProductInCart.objects.get(product=product, cart=cart_user)
                     total_sum += product_in_cart.quantity * product.price
 
-                    """Теперь сохраним товары в таблицу БД ProductsInOrder"""
+                    """Теперь сохраним товары в таблицу БД OrderProduct"""
                     OrderProduct.objects.create(
                         order=order,
                         product=product,
-                        count_product_in_order=product_in_cart.quantity
+                        quantity=product_in_cart.quantity,
                     )
 
-                    """Удалим товар из таблицы ProductsInCart"""
+                    """Удалим товар из таблицы ProductInCart"""
                     product_in_cart.delete()
 
                 order.total_price = total_sum

@@ -3,11 +3,13 @@ from django.contrib.auth.models import AnonymousUser
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import Product, Warehouse, Cart, ProductInCart
+from store_app.models import Cart, Product, ProductInCart, Warehouse
 
 
-class AddProductToCartView(View, LoginRequiredMixin):
-    """Класс добавления товара в корзину пользователя"""
+class AddProductToCartView(LoginRequiredMixin, View):
+    """
+        Добавление товара в корзину
+    """
 
     def post(self, request):
         response_data = {}
@@ -21,39 +23,41 @@ class AddProductToCartView(View, LoginRequiredMixin):
                 response_data['status'] = 'MORE'
                 return JsonResponse(response_data)
 
-            cart_user = Cart.objects.filter(user=request.user).first()
-            if cart_user:
+            cart = Cart.objects.filter(user=request.user).first()
+            if cart:
                 """Если корзина пользователя уже есть, и он добавлял ранее какой-то товар"""
-                cart_user.products.add(product)
+                cart.products.add(product)
                 try:
-                    """Если позиция данного товара уже в корзине и пользователь еще хочет добавить несколько товаров 
-                    одной позиции """
-                    product_in_cart = cart_user.product_in_cart.filter(product=product).first()
+                    """
+                    Если позиция данного товара уже в корзине и
+                    пользователь еще хочет добавить несколько товаров одной позиции
+                    """
+                    product_in_cart = cart.product_in_cart.filter(product=product).first()
                     if not product_in_cart:
                         product_in_cart = ProductInCart.objects.create(
                             quantity=0,
                             product=product,
-                            cart=cart_user
+                            cart=cart,
                         )
-                    product_in_cart.quantity = product_in_cart.quantity + int(request.POST.get('count_product'))
+                    product_in_cart.quantity += int(request.POST.get('count_product'))
                     product_in_cart.save()
 
                 except Exception as e:
                     print(e)
                     """В существующую корзину добавляется новый товар и указывается количество"""
-                    cart_user.product_in_cart.create(
+                    cart.product_in_cart.create(
                         product=product,
-                        count_product_in_cart=int(request.POST.get('count_product'))
+                        quantity=int(request.POST.get('count_product')),
                     )
 
             else:
                 """Иначе создается корзина, и добавляется первый товар в корзину"""
-                cart_user = Cart.objects.create(user=request.user)
-                cart_user.products.add(product)
+                cart = Cart.objects.create(user=request.user)
+                cart.products.add(product)
                 ProductInCart.objects.create(
-                    cart=cart_user,
+                    cart=cart,
                     product=product,
-                    quantity=int(request.POST.get('count_product'))
+                    quantity=int(request.POST.get('count_product')),
                 )
 
             """Кол-во этого товара теперь на складе уменьшается"""
