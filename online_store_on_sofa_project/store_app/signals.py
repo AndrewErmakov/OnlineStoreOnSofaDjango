@@ -1,4 +1,4 @@
-from django.db.models import signals, Avg
+from django.db.models import Avg, signals
 from django.dispatch import receiver
 
 from store_app.models import Comment
@@ -16,11 +16,9 @@ def post_save_comment(sender, instance, created, **kwargs):
 def post_delete_comment(sender, instance, created=False, **kwargs):
     """Сигнал после удаления комментария"""
     product = instance.product
-    product.count_reviews -= 1
-    if product.count_reviews == 0:
-        product.avg_rating = -1
+    comments = product.comments.all()
+    if comments.count() == 0:
+        product.avg_rating = None
     else:
-        product.avg_rating = product.comment_set.all().aggregate(Avg('rating'))['rating__avg']
+        product.avg_rating = product.comments.all().aggregate(Avg('rating'))['rating__avg']
     product.save()
-
-

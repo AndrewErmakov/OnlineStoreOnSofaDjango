@@ -1,17 +1,18 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views import View
 
 from store_app.accessory_modules import decryption_number_order
+from store_app.mixins import CheckOrderDetailMixin
 
 
-class CreatedOrderView(View, LoginRequiredMixin):
-    """Класс просмотра страницы о созданном заказе"""
+class CreatedOrderView(CheckOrderDetailMixin, View):
+    """
+        Детали созданного заказа
+    """
 
     def get(self, request, encrypted_order_num, key):
-        try:
-            return render(request, 'order_created.html',
-                          {'num': decryption_number_order(encrypted_order_num, key)})
-        except Exception as e:
-            print(e)
-            return redirect('home')
+        return render(
+            request=request,
+            template_name='order_created.html',
+            context={'num': decryption_number_order(encrypted_order_num, key)},
+        )

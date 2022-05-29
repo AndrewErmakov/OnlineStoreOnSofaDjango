@@ -3,11 +3,13 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import Product, ProductInCart, Cart, Warehouse
+from store_app.models import Product, ProductInCart, Warehouse
 
 
-class IncreaseCountProductsView(View, LoginRequiredMixin):
-    """Увеличение числа одной позиции товара в корзине на 1"""
+class IncreaseCountProductsView(LoginRequiredMixin, View):
+    """
+        Увеличение числа одной позиции товара в корзине на 1
+    """
 
     def post(self, request):
         response_data = {}

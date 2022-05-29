@@ -25,12 +25,12 @@
         <div class="col-sm-8 text-left">
             <h1>Список товаров</h1>
             {% for product in products %}
-            <button class="accordion" id="accordion_{{ product.pk }}">{{ product.title }}</button>
+            <button class="accordion" id="accordion_{{ product.pk }}">{{ product.name }}</button>
             <div class="panel" id="panel_{{ request.pk }}">
                 <p><h2>Описание</h2>{{ product.description }}</p>
                 <p><h2>Цена</h2>{{ product.price }}</p>
                 <p><h2>Бренд</h2>{{ product.brand }}</p>
-                <p><h2>Рубрика</h2>{{ product.rubric }}</p>
+                <p><h2>Рубрика</h2>{{ product.category }}</p>
                 <div class="btn-group btn-group-justified">
                     <a href="{% url 'add_count_received_product_to_warehouse' product.pk %}" class="btn btn-primary">
                         Добавить количество поступившего товара на склад

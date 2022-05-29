@@ -3,7 +3,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.views import View
 
-from store_app.models import Product, ProductInCart, Cart, Warehouse
+from store_app.models import Product, ProductInCart, Warehouse
 
 
 class DeleteProductInCartView(View, LoginRequiredMixin):

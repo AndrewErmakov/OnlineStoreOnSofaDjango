@@ -1,5 +1,6 @@
 from django.forms import ModelForm
-from store_app.models import Product, ImageProduct
+
+from store_app.models import ImageProduct, Product
 
 
 class NewProductForm(ModelForm):
