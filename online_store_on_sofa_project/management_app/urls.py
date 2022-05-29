@@ -19,12 +19,12 @@ urlpatterns = [
     ),
 
     path(
-        'add_new_products/',
+        'add_product/',
         AddProductView.as_view(),
         name='add_new_products',
     ),
     path(
-        'add_images_for_product/',
+        'add_product_image/',
         AddProductImageView.as_view(),
         name='add_images_for_product',
     ),
@@ -35,18 +35,22 @@ urlpatterns = [
     ),
 
     path(
-        'add_count_received_product_to_warehouse/product/<int:pk>/',
+        'add_product_to_warehouse/<int:pk>/',
         AddReceivedProductToWarehouse.as_view(),
         name='add_count_received_product_to_warehouse',
     ),
 
     path(
-        'change_characteristics_product/product/<int:pk>/',
+        'change_characteristics_product/<int:pk>/',
         ChangeCharacteristicsProductView.as_view(),
         name='change_characteristics_product',
     ),
 
-    path('get_analytics/sales/', GetSalesAnalyticsView.as_view(), name='get_sales_analytics'),
+    path(
+        'sales_analytics/',
+        GetSalesAnalyticsView.as_view(),
+        name='get_sales_analytics',
+    ),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

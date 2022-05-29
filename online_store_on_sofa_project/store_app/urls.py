@@ -58,7 +58,7 @@ urlpatterns = [
         name='history_orders',
     ),
     path(
-        'pdf_details_order/<str:num_str>',
+        'pdf_details_order/<str:num_order>',
         GenerateOrderPdfView.as_view(),
         name='pdf_details_order',
     ),
