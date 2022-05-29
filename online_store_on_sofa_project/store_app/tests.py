@@ -1,7 +1,9 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from store_app.models import Category, Product
+from online_store_on_sofa_project.utils import reverse_with_query_params
+
+from .models import Category, Product
 
 
 class ProductListTestCase(TestCase):
@@ -11,7 +13,7 @@ class ProductListTestCase(TestCase):
         for category in ('category1', 'category2', 'category3'):
             Category.objects.create(name=category)
 
-        product_quantity = 20
+        product_quantity = 21
         brands = (
             'abibas', 'ruma', 'greebok', 'musa', 'lakey', 'ucrop',
         )
@@ -29,24 +31,80 @@ class ProductListTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
 
-        categories = response.context['categories']
-        self.assertEqual(len(categories), 3)
-        for category in categories:
-            self.assertIn(category.name, ('category1', 'category2', 'category3'))
-            self.assertIn(category.id, (1, 2, 3))
+        self.__check_categories(response)
 
         paginator = response.context['page_obj']
         self.assertEqual(paginator.number, 1)
         products = paginator.object_list
 
+        self.assertEqual(len(products), 6)
+
         for product in products:
-            self.assertIn(product.id, range(15, 21))
+            self.assertIn(product.id, range(16, 22))
 
         product = products[0]
-        self.assertEqual(product.id, 20)
-        self.assertEqual(product.name, 'Товар №29')
-        self.assertEqual(product.description, 'Описание 29')
-        self.assertEqual(product.price, 119)
+        self.assertEqual(product.id, 21)
+        self.assertEqual(product.name, 'Товар №30')
+        self.assertEqual(product.description, 'Описание 30')
+        self.assertEqual(product.price, 120)
 
         self.assertTrue(paginator.has_next())
         self.assertEqual(paginator.next_page_number(), 2)
+
+    def test_product_list_filter_by_category(self):
+        response = self.client.get(reverse_with_query_params(
+            view='home',
+            query_kwargs={'category': 1},
+        ))
+        self.assertEqual(response.status_code, 200)
+
+        self.__check_categories(response)
+
+        paginator = response.context['page_obj']
+        self.assertEqual(paginator.number, 1)
+        products = paginator.object_list
+
+        self.assertEqual(len(products), 6)
+
+        for product in products:
+            self.assertEqual(product.category_id, 1)
+            self.assertNotIn(product.category_id, (2, 3))
+
+        product = products[0]
+        self.assertEqual(product.id, 19)
+        self.assertEqual(product.name, 'Товар №28')
+        self.assertEqual(product.description, 'Описание 28')
+        self.assertEqual(product.price, 118)
+
+        self.assertTrue(paginator.has_next())
+        self.assertEqual(paginator.next_page_number(), 2)
+
+    def test_search_product_list(self):
+        response = self.client.get(reverse_with_query_params(
+            view='home',
+            query_kwargs={'search': 'Товар №3'},
+        ))
+        self.assertEqual(response.status_code, 200)
+
+        self.__check_categories(response)
+
+        paginator = response.context['page_obj']
+        self.assertEqual(paginator.number, 1)
+        products = paginator.object_list
+
+        self.assertEqual(len(products), 1)
+
+        product = products[0]
+
+        self.assertEqual(product.id, 21)
+        self.assertEqual(product.name, 'Товар №30')
+        self.assertEqual(product.category_id, 3)
+
+        self.assertFalse(paginator.has_next())
+
+    def __check_categories(self, response):
+        categories = response.context['categories']
+        self.assertEqual(len(categories), 3)
+        for category in categories:
+            self.assertIn(category.name, ('category1', 'category2', 'category3'))
+            self.assertIn(category.id, (1, 2, 3))

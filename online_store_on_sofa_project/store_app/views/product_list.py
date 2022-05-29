@@ -14,7 +14,7 @@ SORT_MAPPER = {
 
 
 class ProductListView(View):
-    """Класс просмотра товаров"""
+    """Проосмотр товаров"""
 
     def get(self, request):
         context = {}

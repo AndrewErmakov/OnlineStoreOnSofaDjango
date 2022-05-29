@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import AccessMixin
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
-from store_app.models import Order
+from .models import Order
 
 
 class CheckOrderDetailMixin(AccessMixin):
@@ -12,18 +12,30 @@ class CheckOrderDetailMixin(AccessMixin):
     """
 
     def dispatch(self, request, *args, **kwargs):
-        encrypted_order_num = kwargs.get('encrypted_order_num')
-        key = kwargs.get('key')
+        filter_conditions = self.get_filter_conditions(kwargs)
 
-        if not isinstance(encrypted_order_num, int) or not isinstance(key, int):
-            permission_flag = False
-        else:
-            order = Order.objects.filter(id=encrypted_order_num - key).first()
-            permission_flag = True if order and self.__check_buyer(order, request.user) else False
+        order = Order.objects.filter(**filter_conditions).first()
+        permission_flag = bool(order and self.__check_buyer(order, request.user))
 
-        if not request.user.is_authenticated or not permission_flag:
+        if (not request.user.is_authenticated or not permission_flag) \
+                and not request.user.is_superuser:
             return redirect('home')
         return super().dispatch(request, *args, **kwargs)
+
+    @staticmethod
+    def get_filter_conditions(params: dict):
+        filter_conditions = {
+            key: params.get(key)
+            for key in ('encrypted_order_num', 'key', 'num_order')
+            if params.get(key)
+        }
+
+        if filter_conditions.keys() >= {'encrypted_order_num', 'key'}:
+            encrypted_order_num = filter_conditions.pop('encrypted_order_num')
+            key = filter_conditions.pop('key')
+            filter_conditions['id'] = encrypted_order_num - key
+
+        return filter_conditions
 
     @staticmethod
     def __check_buyer(order: Order, user: User) -> bool:

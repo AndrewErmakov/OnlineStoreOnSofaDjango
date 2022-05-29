@@ -24,7 +24,7 @@
                     {% else %}
                         <h2>Ваша корзина.</h2>
                         <div class="jumbotron" id="products_in_cart">
-                            {% for product in products_in_cart %}
+                            {% for product in products %}
                                 <div class="row align-items-start" id="container_{{ product.pk }}">
                                     <div class="col-4 col-sm-4">
                                         <img class="img-thumbnail" src="{{ product.imageproduct_set.first.image.url }}"
@@ -66,8 +66,10 @@
                                         <form action="delete_product_in_cart" class="delete_product_in_cart_form"
                                               method="POST">
                                             {% csrf_token %}
-                                            <button type="submit" id="delete_product_{{ product.pk }}"><span
-                                                    class="glyphicon glyphicon-trash"></span>Удалить
+                                            <button type="submit"
+                                                    class="btn btn-danger"
+                                                    id="delete_product_{{ product.pk }}">
+                                                <span class="glyphicon glyphicon-trash"></span>Удалить
                                             </button>
                                             <input type="hidden" name="product_id" value="{{ product.id }}"
                                                    id="product_{{ product.id }}" class="product_id">
@@ -82,17 +84,25 @@
                             <h2>Итоговая сумма</h2>
                             <h2 class="total_sum">{{ total_sum }}</h2>
                         </div>
-                        <form action="{% url 'user_cart_page' %}" method="POST" class="well">
-                            {% csrf_token %}
+                        <div class="well">
                             <h1>Выбор способа оплаты</h1>
-                            <p><input type="radio" checked name="payment_method_group" value="delivery"/> Оплата при
-                                получении</p>
-                            <p><input type="radio" name="payment_method_group" value="online"/> Оплата онлайн</p>
-                            <button type="submit"
+                            <label>
+                                <input type="radio"
+                                       checked name="payment_method_group"
+                                       value="delivery"/>
+                            </label>
+                            Оплата при получении
+                            <label>
+                                <input type="radio"
+                                       name="payment_method_group"
+                                       value="online"/>
+                            </label>
+                            Оплата онлайн
+                            <button onclick="ordering()"
                                     class="btn btn-primary btn-lg btn-block">
                                 Оформить заказ
                             </button>
-                        </form>
+                        </div>
 
                     {% endif %}
 

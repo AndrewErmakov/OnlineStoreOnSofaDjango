@@ -24,8 +24,8 @@ class GeneratePdfDetailsOrder:
         self.report_elements = []
 
     def generate_pdf(self):
-        self.register_fonts()
-        styles = self.set_need_styles()
+        self.__register_fonts()
+        styles = self.__set_need_styles()
         mapping_info_order = {
             0: [f'Заказ №{self.num_order}', styles['our_heading']],
             1: [f'Эл.почта покупателя: {self.order.buyer_email}', styles['our_info']],
@@ -34,9 +34,9 @@ class GeneratePdfDetailsOrder:
         }
 
         for i in range(4):
-            self.add_paragraph(mapping_info_order[i][0], mapping_info_order[i][1])
+            self.__add_paragraph(mapping_info_order[i][0], mapping_info_order[i][1])
 
-        table = self.fill_and_generate_table(order=self.order, need_font='FreeSans')
+        table = self.__fill_and_generate_table(order=self.order, need_font='FreeSans')
         self.report_elements.append(table)
 
         """ Создание объект PDF, используя буфер в качестве своего «файла»."""
@@ -50,13 +50,13 @@ class GeneratePdfDetailsOrder:
         return self.buffer
 
     @staticmethod
-    def register_fonts():
+    def __register_fonts():
         """Регистрация необходимых шрифтов"""
         pdfmetrics.registerFont(TTFont('FreeSans', 'FreeSans.ttf'))
         pdfmetrics.registerFont(TTFont('FreeSansBold', 'FreeSansBold.ttf'))
 
     @staticmethod
-    def set_need_styles():
+    def __set_need_styles():
         """Установка необходимых стилей для оформления отчета"""
         need_styles = getSampleStyleSheet()
         need_styles.add(
@@ -78,7 +78,7 @@ class GeneratePdfDetailsOrder:
         return need_styles
 
     @staticmethod
-    def fill_and_generate_table(order: Order, need_font):
+    def __fill_and_generate_table(order: Order, need_font):
         """
             Генерация данных для таблицы: инфо о товарах в заказе
         """
@@ -108,6 +108,6 @@ class GeneratePdfDetailsOrder:
         generated_table.setStyle(table_style)
         return generated_table
 
-    def add_paragraph(self, info, style):
+    def __add_paragraph(self, info, style):
         self.report_elements.append(Paragraph(info, style))
         self.report_elements.append(Spacer(1, 10))
