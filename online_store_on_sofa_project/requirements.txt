@@ -35,5 +35,4 @@ flake8-commas==2.1.0
 flake8-variables-names==0.0.5
 flake8-import-order==0.18.1
 flake8-simplify==0.19.2
-flake8-print==5.0.0
 flake8-colors==0.1.9

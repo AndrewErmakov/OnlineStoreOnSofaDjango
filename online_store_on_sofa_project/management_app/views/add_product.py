@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views import View
@@ -9,7 +10,7 @@ from store_app.models import Product, Warehouse
 from ..forms import NewProductForm
 
 
-class AddProductView(View, HasPermissionsMixin):
+class AddProductView(HasPermissionsMixin, View):
     required_permission = 'add_products'
 
     def get(self, request):
@@ -19,8 +20,7 @@ class AddProductView(View, HasPermissionsMixin):
                 template_name='add_new_products.html',
                 context={'form': NewProductForm()},
             )
-        except Exception as e:
-            print(e)
+        except PermissionDenied:
             return redirect('home')
 
     def post(self, request):
@@ -41,6 +41,5 @@ class AddProductView(View, HasPermissionsMixin):
                     )
             return redirect('add_images_for_product')
 
-        except Exception as e:
-            print(e)
+        except PermissionDenied:
             return redirect('home')

@@ -1,8 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.views import View
 
-from store_app.models import Cart, ProductInCart
+from store_app.models import Cart
 
 
 class CartView(LoginRequiredMixin, View):
@@ -18,7 +18,7 @@ class CartView(LoginRequiredMixin, View):
             for product_in_cart in products_in_cart:
                 count_each_product[product_in_cart.product_id] = [
                     product_in_cart.quantity,
-                    product_in_cart.quantity * product_in_cart.product.price
+                    product_in_cart.quantity * product_in_cart.product.price,
                 ]
                 total_sum += product_in_cart.quantity * product_in_cart.product.price
 

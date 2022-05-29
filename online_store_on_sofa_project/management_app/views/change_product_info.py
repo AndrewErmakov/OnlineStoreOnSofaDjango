@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
 from django.views import View
 
@@ -6,7 +7,7 @@ from rolepermissions.mixins import HasPermissionsMixin
 from store_app.models import Product
 
 
-class ChangeProductInfoView(View, HasPermissionsMixin):
+class ChangeProductInfoView(HasPermissionsMixin, View):
     required_permission = 'change_info_existing_products'
 
     def get(self, request):
@@ -16,6 +17,5 @@ class ChangeProductInfoView(View, HasPermissionsMixin):
                 template_name='change_info_existing_products.html',
                 context={'products': Product.objects.all()},
             )
-        except Exception as e:
-            print(e)
+        except PermissionDenied:
             return redirect('home')
