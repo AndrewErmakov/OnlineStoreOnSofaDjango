@@ -1,6 +1,7 @@
 import datetime
 import json
 
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
 from django.views import View
 
@@ -11,7 +12,7 @@ from rolepermissions.mixins import HasPermissionsMixin
 from store_app.models import Order
 
 
-class GetSalesAnalyticsView(View, HasPermissionsMixin):
+class GetSalesAnalyticsView(HasPermissionsMixin, View):
     required_permission = 'get_analytics'
 
     def get(self, request):
@@ -38,6 +39,5 @@ class GetSalesAnalyticsView(View, HasPermissionsMixin):
                     'json_data': json_data,
                 },
             )
-        except Exception as e:
-            print(e)
+        except PermissionDenied:
             return redirect('home')

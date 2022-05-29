@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import JsonResponse
 from django.views import View
@@ -34,7 +35,6 @@ class SendAnswerToClientFeedbackClaim(HasPermissionsMixin, View):
             )
             return JsonResponse(response_data)
 
-        except Exception as e:
-            print(e)
+        except PermissionDenied:
             response_data['status'] = 'BAD'
             return JsonResponse(response_data)

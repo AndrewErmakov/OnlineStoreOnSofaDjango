@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
 from django.views import View
 
@@ -6,7 +7,7 @@ from rolepermissions.mixins import HasPermissionsMixin
 from ..forms import NewProductImageForm
 
 
-class AddProductImageView(View, HasPermissionsMixin):
+class AddProductImageView(HasPermissionsMixin, View):
     required_permission = 'add_images_for_product'
 
     def get(self, request):
@@ -16,8 +17,7 @@ class AddProductImageView(View, HasPermissionsMixin):
                 template_name='add_images_for_product.html',
                 context={'form': NewProductImageForm()},
             )
-        except Exception as e:
-            print(e)
+        except PermissionDenied:
             return redirect('home')
 
     def post(self, request):
@@ -27,6 +27,5 @@ class AddProductImageView(View, HasPermissionsMixin):
                 form.save()
             return redirect('add_images_for_product')
 
-        except Exception as e:
-            print(e)
+        except PermissionDenied:
             return redirect('home')
