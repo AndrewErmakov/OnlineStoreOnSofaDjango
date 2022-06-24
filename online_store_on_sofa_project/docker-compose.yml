@@ -3,6 +3,7 @@ version: "3.3"
 services:
   db:
     image: postgres:14.3-alpine
+    restart: always
     volumes:
       - django_db_data:/var/lib/postgresql/data
     environment:
@@ -10,12 +11,16 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    networks:
+      - nginx_network
   web:
     build: .
     command: bash run.sh
     volumes:
       - .:/code
+      - static_volume:/code/static
+      - media_volume:/code/media
     ports:
       - "8000:8000"
     env_file:
@@ -30,16 +35,25 @@ services:
     restart: always
     image: redis:alpine
     ports:
-      - "6379:6379"
+      - "6380:6379"
+    networks:
+      - redis_network
 
   celery:
     build: .
     command: celery -A online_store_on_sofa_project worker -l INFO
     depends_on:
       - redis
+    networks:
+      - redis_network
+
 
   nginx:
-    image: nginx:1.19.0-alpine
+    build: ./nginx
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/
+      - static_volume:/code/static
+      - media_volume:/code/media
     ports:
       - "80:80"
     depends_on:
@@ -47,9 +61,14 @@ services:
     networks:
       - nginx_network
 
-volumes:
-  django_db_data:
-
 networks:
   nginx_network:
     driver: bridge
+  redis_network:
+    driver: bridge
+
+volumes:
+  django_db_data:
+  static_volume:
+  media_volume:
+
