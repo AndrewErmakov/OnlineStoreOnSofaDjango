@@ -7,9 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'web']
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 INSTALLED_APPS = [
@@ -121,10 +121,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-    '/var/www/static/',
-]
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+# in local development,
+else:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 # settings for sending e-mail
 
