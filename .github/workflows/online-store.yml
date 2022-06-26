@@ -20,7 +20,7 @@ jobs:
 
     - name: Install libs to Ubuntu
       run: |
-        apt install graphviz graphviz-dev
+        sudo apt install graphviz graphviz-dev
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
