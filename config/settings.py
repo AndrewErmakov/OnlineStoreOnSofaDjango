@@ -125,7 +125,7 @@ if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # in local development,
 else:
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # settings for sending e-mail
 

@@ -1,5 +1,3 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
 
 from .views import AddCommentView, AddProductToCartView, CartView, ContactsPageView, \
@@ -67,5 +65,3 @@ urlpatterns = [
     path('feedback_form', FeedbackView.as_view(), name='feedback_form'),
 
 ]
-
-

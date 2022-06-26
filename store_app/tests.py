@@ -1,7 +1,7 @@
+from config.utils import reverse_with_query_params
+
 from django.test import TestCase
 from django.urls import reverse
-
-from config.utils import reverse_with_query_params
 
 from .models import Category, Product
 

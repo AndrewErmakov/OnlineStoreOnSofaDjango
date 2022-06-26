@@ -1,7 +1,7 @@
+from config.celery import app
+
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-
-from config.celery import app
 
 
 @app.task
