@@ -10,7 +10,7 @@ load_dotenv()
 DEBUG = bool(os.environ.get('DEBUG'))
 
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'web']
-SECRET_KEY = os.environ.get('SECRET_KEY', 'dsadsa')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -132,11 +132,7 @@ else:
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_USE_TLS = True
-
-EMAIL_PORT = os.environ.get('EMAIL_PORT', '')
-if EMAIL_PORT.isdigit():
-    EMAIL_PORT = int(EMAIL_PORT)
-
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 SERVER_EMAIL = EMAIL_HOST_USER
@@ -175,8 +171,8 @@ STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 """
     CELERY SETTINGS
 """
-REDIS_HOST = os.environ.get('REDIS_HOST', '')
-REDIS_PORT = os.environ.get('REDIS_PORT', '')
+REDIS_HOST = os.environ.get('REDIS_HOST')
+REDIS_PORT = os.environ.get('REDIS_PORT')
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     'visibility_timeout': 3600,
