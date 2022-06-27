@@ -1,13 +1,12 @@
+from config.utils import reverse_with_query_params
+
 from django.test import TestCase
 from django.urls import reverse
-
-from online_store_on_sofa_project.utils import reverse_with_query_params
 
 from .models import Category, Product
 
 
 class ProductListTestCase(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         for category in ('category1', 'category2', 'category3'):

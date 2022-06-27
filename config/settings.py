@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
 
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = bool(os.environ.get('DEBUG'))
 
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'web']
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     # third-party apps
     'django_extensions',
     'crispy_forms',
+    'g_recaptcha',
     'captcha',  # simple captcha
     'rolepermissions',
 
@@ -45,7 +46,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'online_store_on_sofa_project.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 TEMPLATES = [
@@ -55,7 +56,6 @@ TEMPLATES = [
             TEMPLATE_DIR,
             TEMPLATE_DIR + f'/{INSTALLED_APPS[-3]}',
             TEMPLATE_DIR + f'/{INSTALLED_APPS[-2]}',
-            TEMPLATE_DIR + '/errors',
             TEMPLATE_DIR + f'/{INSTALLED_APPS[-1]}',
         ],
         'APP_DIRS': True,
@@ -70,15 +70,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'online_store_on_sofa_project.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DB_ENGINE'),
-        'NAME': os.environ.get('DB_NAME'),
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('DB_NAME', 'db.sqlite3'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
@@ -125,7 +125,7 @@ if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # in local development,
 else:
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # settings for sending e-mail
 
@@ -157,7 +157,7 @@ MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = '/media/'
 
-ROLEPERMISSIONS_MODULE = 'online_store_on_sofa_project.roles'
+ROLEPERMISSIONS_MODULE = 'config.roles'
 ROLEPERMISSIONS_REDIRECT_TO_LOGIN = False
 ROLEPERMISSIONS_REGISTER_ADMIN = True
 ROLEPERMISSIONS_SUPERUSER_SUPERPOWERS = False

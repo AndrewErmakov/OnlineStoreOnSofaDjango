@@ -1,6 +1,6 @@
-from django.core.mail import send_mail
+from config.celery import app
 
-from online_store_on_sofa_project.celery import app
+from django.core.mail import send_mail
 
 
 @app.task

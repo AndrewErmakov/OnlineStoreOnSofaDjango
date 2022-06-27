@@ -2,9 +2,9 @@ name: online-store CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "develop" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "develop" ]
 
 jobs:
   build:
@@ -13,18 +13,34 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Install libs to Ubuntu
+      run: |
+        sudo apt install graphviz graphviz-dev
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
+    - name: Checking for stylistic errors
+      run: |
+        flake8 .
+
     - name: Run Tests
+      env:
+        EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        REDIS_HOST: ${{ secrets.REDIS_HOST }}
+        REDIS_PORT: ${{ secrets.REDIS_PORT }}
       run: |
         python manage.py test
