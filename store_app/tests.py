@@ -7,7 +7,6 @@ from .models import Category, Product
 
 
 class ProductListTestCase(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         for category in ('category1', 'category2', 'category3'):

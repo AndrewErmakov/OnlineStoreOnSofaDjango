@@ -77,8 +77,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DB_ENGINE'),
-        'NAME': os.environ.get('DB_NAME'),
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('DB_NAME', 'db.sqlite3'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
@@ -132,7 +132,11 @@ else:
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_USE_TLS = True
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))
+
+EMAIL_PORT = os.environ.get('EMAIL_PORT', '')
+if EMAIL_PORT.isdigit():
+    EMAIL_PORT = int(EMAIL_PORT)
+
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 SERVER_EMAIL = EMAIL_HOST_USER
