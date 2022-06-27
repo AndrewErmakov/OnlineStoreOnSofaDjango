@@ -1,4 +1,5 @@
 # OnlineStoreOnSofaDjango
+![Build status](https://github.com/AndrewErmakov/OnlineStoreOnSofaDjango/actions/workflows/online-store.yml/badge.svg)
 Prototype online store on the sofa with the ability to pay for the order on the website (stripe)
 
 Backend:
