@@ -35,3 +35,7 @@ jobs:
     - name: Checking for stylistic errors
       run: |
         flake8 .
+
+    - name: Run Tests
+        run: |
+          python manage.py test

@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
 
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = bool(os.environ.get('DEBUG'))
 
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'web']
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     # third-party apps
     'django_extensions',
     'crispy_forms',
+    'g_recaptcha',
     'captcha',  # simple captcha
     'rolepermissions',
 
@@ -55,7 +56,6 @@ TEMPLATES = [
             TEMPLATE_DIR,
             TEMPLATE_DIR + f'/{INSTALLED_APPS[-3]}',
             TEMPLATE_DIR + f'/{INSTALLED_APPS[-2]}',
-            TEMPLATE_DIR + '/errors',
             TEMPLATE_DIR + f'/{INSTALLED_APPS[-1]}',
         ],
         'APP_DIRS': True,
